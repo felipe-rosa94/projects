@@ -1,0 +1,21 @@
+{
+  "name": "crud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/server.js",
+    "nodemon": "nodemon ./bin/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase": "^8.2.1",
+    "http": "0.0.1-security",
+    "nodemailer": "^6.4.17",
+    "nodemon": "^2.0.6"
+  }
+}
