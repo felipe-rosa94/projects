@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap');
+
+#appBar {
+    display: flex;
+    align-items: center;
+}
+
+#toolbar {
+    height: 100px;
+    width: 90%;
+}
+
+#img-logo {
+    width: 100px;
+    height: 70px;
+}
+
+#main-toolbar {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+#toolbar-left {
+    display: flex;
+    flex: 1;
+}
+
+#toolbar-center {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+#toolbar-right {
+    display: none;
+}
+
+#button-menu {
+    margin-right: 50px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: large;
+}
