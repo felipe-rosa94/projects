@@ -1,8 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap');
+#header {
+    position: sticky;
+    top: 0;
+}
 
 #appBar {
     display: flex;
     align-items: center;
+    background-color: white;
 }
 
 #toolbar {
@@ -38,6 +42,6 @@
 
 #button-menu {
     margin-right: 50px;
+    font-size: medium;
     font-family: 'Work Sans', sans-serif;
-    font-size: large;
 }

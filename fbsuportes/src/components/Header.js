@@ -9,7 +9,6 @@ class Header extends React.Component {
             <div id="header">
                 <AppBar
                     id="appBar"
-                    position="sticky"
                     color="default">
                     <Toolbar id="toolbar" variant="dense">
                         <div id="main-toolbar">
@@ -17,9 +16,9 @@ class Header extends React.Component {
                                 <CardMedia id="img-logo" image={logo}/>
                             </div>
                             <div id="toolbar-center">
-                                <Button id="button-menu">Produtos</Button>
-                                <Button id="button-menu">Clientes</Button>
-                                <Button id="button-menu">Contato</Button>
+                                <Button id="button-menu" href="#section-produtos">Produtos</Button>
+                                <Button id="button-menu">Minha Conta</Button>
+                                <Button id="button-menu" href="#footer">Contato</Button>
                             </div>
                             <div id="toolbar-right">
 
