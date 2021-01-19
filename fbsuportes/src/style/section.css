@@ -27,7 +27,6 @@
     background-color: #e8e8e8;
 }
 
-
 #buttons-grupo {
     font-family: 'Work Sans', sans-serif;
     margin-right: 15px;
@@ -36,7 +35,6 @@
 #carousel {
     width: 100%;
     margin-top: 100px;
-    position:  sticky;
 }
 
 #img-carousel {

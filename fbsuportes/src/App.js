@@ -1,6 +1,7 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import Home from './pages/Home'
+import Carrinho from './pages/Carrinho'
 
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={Home}/>
+                <Route exact path="/carrinho" component={Carrinho}/>
             </Switch>
         </BrowserRouter>
     )

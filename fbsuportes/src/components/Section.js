@@ -3,28 +3,25 @@ import '../style/section.css'
 import firebase from '../firebase'
 import {AppBar, Button, CardMedia, FormLabel, Toolbar} from '@material-ui/core'
 import {Carousel} from 'react-bootstrap'
-import logo from "../images/logo.png";
+import logo from '../images/logo.png'
 
 class Section extends React.Component {
 
     state = {
         produtos: [],
+        filtro: [],
         grupos: [],
         banners: []
     }
 
     filtrar = grupo => {
         let {produtos} = this.state
-
         let array = []
         produtos.forEach(i => {
-            if (grupo === i.grupo) {
-                array.push(i)
-            }
+            if (grupo === i.grupo) array.push(i)
         })
-
         this.posicionar()
-        this.setState({produtos: array})
+        this.setState({filtro: grupo === 'Todos' ? produtos : array})
     }
 
     posicionar = () => {
@@ -67,7 +64,8 @@ class Section extends React.Component {
             .database()
             .ref('produtos/')
             .on('value', snap => {
-                context.setState({produtos: snap.val() !== null ? Object.values(snap.val()) : []})
+                let value = snap.val() !== null ? Object.values(snap.val()) : []
+                context.setState({produtos: value, filtro: value})
             })
     }
 
@@ -77,7 +75,9 @@ class Section extends React.Component {
             .database()
             .ref('grupos/')
             .on('value', snap => {
-                context.setState({grupos: snap.val() !== null ? Object.values(snap.val()) : []})
+                let value = snap.val() !== null ? Object.values(snap.val()) : []
+                value.push({grupo: "Todos", id: "1", ordem: 999})
+                context.setState({grupos: value})
             })
     }
 
@@ -98,7 +98,7 @@ class Section extends React.Component {
     }
 
     render() {
-        const {grupos, produtos, banners} = this.state
+        const {grupos, filtro, banners} = this.state
         return (
             <section id="section">
                 <AppBar
@@ -144,7 +144,7 @@ class Section extends React.Component {
                     </Carousel>
                     <section id="section-produtos">
                         {
-                            produtos.map(i => (
+                            filtro.map(i => (
                                 <section id="section-produto" onClick={() => this.props.handleChange(i)}>
                                     <CardMedia id="img-produto" image={i.imagem}/>
                                     <section id="section-descricoes">

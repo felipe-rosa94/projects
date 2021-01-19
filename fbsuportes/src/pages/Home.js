@@ -1,5 +1,4 @@
 import React from 'react'
-import Header from '../components/Header'
 import Section from '../components/Section'
 import Footer from '../components/Footer'
 import '../style/home.css'
@@ -23,6 +22,11 @@ class Home extends React.Component {
         }
     }
 
+    adicionaCarrinho = () => {
+        const {produto, quantidade} = this.state
+        this.props.history.push({pathname: '/carrinho', state: {produto: produto, quantidade: quantidade}})
+    }
+
     adicionaQuantidade = () => {
         let {quantidade} = this.state
         this.setState({quantidade: ++quantidade})
@@ -37,7 +41,7 @@ class Home extends React.Component {
         const {openSacola, produto: {descricao, grupo, id, imagem, nome, observacao, preco}, quantidade} = this.state
         return (
             <div id="home">
-                <Header/>
+
                 <Section handleChange={this.handleProduto.bind(this)}/>
                 <Footer/>
 
@@ -59,18 +63,10 @@ class Home extends React.Component {
                                 <FormLabel id="dialog-nome">{nome}</FormLabel>
                                 <FormLabel id="dialog-descricao">{descricao}</FormLabel>
                                 {observacao && <FormLabel id="dialog-observacao">{observacao}</FormLabel>}
-                                <FormLabel id="dialog-preco">{parseFloat(preco).toLocaleString('pt-BR', {
+                                <FormLabel id="dialog-preco">{parseFloat(preco * quantidade).toLocaleString('pt-BR', {
                                     style: 'currency',
                                     currency: 'BRL'
                                 })}</FormLabel>
-                            </div>
-                            <div id="div-cep">
-                                <TextField id="inputs" label="CEP" variant="outlined"/>
-                                <Button id="botao-verificar">Ok</Button>
-                            </div>
-                            <div id="div-cep">
-                                <TextField id="inputs" label="Cupom" variant="outlined"/>
-                                <Button id="botao-verificar">Ok</Button>
                             </div>
                             <div id="div-botao">
                                 <div id="div-quantidade">
@@ -85,7 +81,7 @@ class Home extends React.Component {
                                         <Remove id="icones" onClick={this.removeQuantidade}/>
                                     </div>
                                 </div>
-                                <div id="div-comprar">
+                                <div id="div-comprar" onClick={this.adicionaCarrinho}>
                                     <div id="botao-comprar">
                                         Comprar
                                     </div>

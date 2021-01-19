@@ -57,12 +57,6 @@
     color: green;
 }
 
-#div-cep {
-    display: flex;
-    flex-direction: row;
-    margin: 10px;
-}
-
 #inputs {
     height: 10px;
 }
