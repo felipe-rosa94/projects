@@ -58,7 +58,7 @@ class Home extends React.Component {
                             </div>
                         </div>
 
-                        <div id="div-descricoes">
+                        <div id="div-descricoes-dialog">
                             <div id="div-descritivos">
                                 <FormLabel id="dialog-nome">{nome}</FormLabel>
                                 <FormLabel id="dialog-descricao">{descricao}</FormLabel>

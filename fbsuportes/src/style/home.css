@@ -19,7 +19,7 @@
     margin: 20px;
 }
 
-#div-descricoes {
+#div-descricoes-dialog {
     display: flex;
     flex-direction: column;
     flex: 1;

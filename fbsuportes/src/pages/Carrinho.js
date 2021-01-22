@@ -1,22 +1,61 @@
 import React from 'react'
-import {AppBar, Button, CardMedia, FormLabel, Toolbar, TextField} from '@material-ui/core'
+import {
+    AppBar,
+    Button,
+    CardMedia,
+    FormLabel,
+    Toolbar,
+    TextField,
+    FormControlLabel,
+    Radio,
+    RadioGroup
+} from '@material-ui/core'
 import {Add, Remove} from '@material-ui/icons'
+import {withStyles} from '@material-ui/styles'
 import logo from '../images/logo.png'
 import '../style/header.css'
 import '../style/carrinho.css'
+
+
+let fretes = []
+
+const RadioCheck = withStyles({
+    root: {
+        color: '#000000',
+        '&$checked': {
+            color: '#000000',
+        },
+    },
+    checked: {},
+})(props => <Radio color="default" {...props} />)
 
 class Carrinho extends React.Component {
 
     state = {
         openCadastro: false,
         produto: {},
-        quantidade: 1
+        quantidade: 1,
+        fretes: [],
+        frete: 0,
+        desconto: 1,
+        cep: ''
+    }
+
+    onTipoEntrega = valor => {
+        this.setState({frete: valor})
+    }
+
+    inputs = e => {
+        if (e.target.name === 'cupom' && e.target.value === 'VALE10') {
+            this.setState({desconto: 0.9})
+        } else {
+            this.setState({[e.target.name]: e.target.value})
+        }
     }
 
     handleQtd = e => {
-        if (e.target.value !== '' && parseInt(e.target.value) > 0) {
+        if (e.target.value !== '' && parseInt(e.target.value) > 0)
             this.setState({quantidade: parseInt(e.target.value)})
-        }
     }
 
     adicionaQuantidade = () => {
@@ -67,15 +106,50 @@ class Carrinho extends React.Component {
         }
     }
 
+    calcularFrete = async () => {
+        fretes = []
+        let tipos = ['pac', 'sedex']
+        tipos.forEach((i, index) => {
+            this.obterFrete(i)
+        })
+    }
+
+
+    obterFrete = async tipo => {
+        const {cep} = this.state
+
+        let origem = '92410320'
+        let altura = '50'
+        let largura = '50'
+        let comprimento = '20'
+        let peso = '500'
+
+        let URL_BASE = 'http://webservice.kinghost.net/web_frete.php?auth=0dd752ad2a1455f7be761d450d84b240'
+        let PARAMS = `&tipo=${tipo}&formato=json&cep_origem=${origem}&cep_destino=${cep}&cm_altura=${altura}&cm_largura=${largura}&cm_comprimento=${comprimento}&peso=${peso}`
+        let url = `https://cors-anywhere.herokuapp.com/${URL_BASE}${PARAMS}`
+
+        let {valor, prazo_entrega} = await fetch(url).then((response) => response.json())
+
+        let json = {
+            valor: parseFloat(valor),
+            tipo: `${tipo} ${parseFloat(valor).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            })} ${prazo_entrega} ${prazo_entrega === '1' ? 'Dia' : 'Dias'}`,
+        }
+
+        fretes.push(json)
+        this.setState({fretes: fretes})
+    }
+
     componentDidMount() {
+        fretes = []
         const {produto, quantidade} = this.props.location.state
         this.setState({produto: produto, quantidade: quantidade})
     }
 
     render() {
-
-        const {produto: {nome, preco, imagem}, quantidade} = this.state
-        console.log(nome)
+        const {produto: {nome, preco, imagem}, quantidade, fretes, frete, desconto} = this.state
         return (
             <section id="carrinho">
                 <AppBar
@@ -165,20 +239,56 @@ class Carrinho extends React.Component {
                     </section>
 
                     <section id="main-obs">
+
                         <div id="div-cep">
                             <div id="div-label-cep">
-                                <TextField id="input-cep" label="CEP" variant="outlined"/>
-                                <Button id="botao-verificar">Ok</Button>
+                                <div id="div-cep-content">
+                                    <TextField id="input-cep" name="cep" label="CEP" variant="outlined"
+                                               onChange={this.inputs}/>
+                                    <Button id="botao-verificar" variant="outlined"
+                                            onClick={this.calcularFrete}>Ok</Button>
+                                </div>
+                            </div>
+
+                            <RadioGroup id="div-resultados-cep">
+                                {
+                                    fretes.map(i => (
+                                        <FormControlLabel id="label-valor-prazo-entrega"
+                                                          control={<RadioCheck/>} value={i.tipo} label={i.tipo}
+                                                          onChange={() => this.onTipoEntrega(i.valor)}/>
+                                    ))
+                                }
+                            </RadioGroup>
+                        </div>
+
+                        <div id="div-cupom">
+                            <div id="div-label-cep">
+                                <div id="div-cep-content">
+                                    <TextField id="input-cep" name="cupom" label="Cupom" variant="outlined"
+                                               onChange={this.inputs}/>
+                                    <Button id="botao-verificar" variant="outlined">Ok</Button>
+                                </div>
                             </div>
                             <div id="div-resultados-cep">
 
                             </div>
                         </div>
-                        <div id="div-cupom">
-                            <div id="div-label-cupom">
 
+                        <div id="div-total">
+                            <div id="div-resultados-totais">
+                                <FormLabel id="label-total">{`Total
+                                    ${(frete + ((parseFloat(preco) * quantidade) * desconto)).toLocaleString('pt-BR', {
+                                    style: 'currency',
+                                    currency: 'BRL'
+                                })}`}
+                                </FormLabel>
+                                {
+                                    desconto !== 1 &&
+                                    <FormLabel id="label-desconto">{`Desconto 10%`}</FormLabel>
+                                }
                             </div>
                         </div>
+
                     </section>
 
                 </section>
