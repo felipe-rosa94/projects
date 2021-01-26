@@ -15,11 +15,7 @@ import {withStyles} from '@material-ui/styles'
 import logo from '../images/logo.png'
 import '../style/header.css'
 import '../style/carrinho.css'
-import {hideData, showData} from "../util";
-import {Form} from "react-bootstrap";
-
-require('mercadopago')
-
+import {hideData, showData, removeCharacter, getDeliveryValues} from "../util"
 
 let fretes = []
 
@@ -51,12 +47,18 @@ class Carrinho extends React.Component {
         this.setState({frete: valor})
     }
 
-    inputs = e => {
-        if (e.target.name === 'cep') {
-            if (e.target.value !== '')
-                this.setState({[e.target.name]: e.target.value.substring(0, 8)})
+    inputs = async e => {
+        let name = e.target.name
+        let value = e.target.value
+        if (name === 'cep') {
+            let cep = removeCharacter(value)
+            this.setState({[name]: cep})
+            if (cep.length === 8) {
+                let fretes = await getDeliveryValues('92410320', cep)
+                this.setState({fretes: fretes})
+            }
         } else {
-            this.setState({[e.target.name]: e.target.value.toUpperCase()})
+            this.setState({[name]: value.toUpperCase()})
         }
     }
 
@@ -166,36 +168,6 @@ class Carrinho extends React.Component {
         }
     }
 
-    obterFrete = async (tipo, cep, index) => {
-        let origem = '92410320'
-        let altura = '50'
-        let largura = '50'
-        let comprimento = '20'
-        let peso = '500'
-
-        let URL_BASE = 'http://webservice.kinghost.net/web_frete.php?auth=0dd752ad2a1455f7be761d450d84b240'
-        let PARAMS = `&tipo=${tipo}&formato=json&cep_origem=${origem}&cep_destino=${cep}&cm_altura=${altura}&cm_largura=${largura}&cm_comprimento=${comprimento}&peso=${peso}`
-        let url = `https://cors-anywhere.herokuapp.com/${URL_BASE}${PARAMS}`
-
-        let {valor, prazo_entrega} = await fetch(url).then((response) => response.json())
-
-        if (valor === undefined) {
-            if (index)
-                alert('CEP inválido')
-            return
-        }
-
-        let json = {
-            valor: parseFloat(valor),
-            tipo: `${tipo} ${parseFloat(valor).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            })} ${prazo_entrega} ${prazo_entrega === '1' ? 'Dia' : 'Dias'}`,
-        }
-
-        fretes.push(json)
-        this.setState({fretes: fretes})
-    }
 
     verificaProdutos = () => {
         let produtos = showData(localStorage.getItem(`fb:itens`))
@@ -326,25 +298,7 @@ class Carrinho extends React.Component {
                     }
 
                     <section id="main-obs">
-                        <div id="div-cep">
-                            <div id="div-label-cep">
-                                <div id="div-cep-content">
-                                    <TextField id="input-cep" name="cep" label="CEP" variant="outlined"
-                                               value={cep} onChange={this.inputs}/>
-                                    <Button id="botao-verificar" variant="outlined"
-                                            onClick={this.calcularFrete}>Ok</Button>
-                                </div>
-                            </div>
-                            <RadioGroup id="div-resultados-cep">
-                                {
-                                    fretes.map(i => (
-                                        <FormControlLabel id="label-valor-prazo-entrega"
-                                                          control={<RadioCheck/>} value={i.tipo} label={i.tipo}
-                                                          onChange={() => this.onTipoEntrega(i.valor)}/>
-                                    ))
-                                }
-                            </RadioGroup>
-                        </div>
+
 
                         <div id="div-cupom">
                             <div id="div-label-cep">
@@ -353,7 +307,7 @@ class Carrinho extends React.Component {
                                                value={cupom}
                                                onChange={this.inputs}/>
                                     <Button id="botao-verificar" variant="outlined"
-                                            onClick={this.onClickCupom}>Ok</Button>
+                                            onClick={this.onClickCupom}>Aplicar</Button>
                                 </div>
                             </div>
                             <div id="div-resultados-cep">
