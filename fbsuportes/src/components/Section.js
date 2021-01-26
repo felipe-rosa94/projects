@@ -1,9 +1,11 @@
 import React from 'react'
+import {withRouter} from 'react-router-dom'
 import '../style/section.css'
 import firebase from '../firebase'
 import {AppBar, Button, CardMedia, FormLabel, Toolbar} from '@material-ui/core'
 import {Carousel} from 'react-bootstrap'
 import logo from '../images/logo.png'
+import {hideData, showData} from "../util";
 
 class Section extends React.Component {
 
@@ -27,6 +29,10 @@ class Section extends React.Component {
     posicionar = () => {
         let elem = document.getElementById('section-produtos')
         this.scroll(elem.offsetTop, 250)
+    }
+
+    pagina = pagina => {
+        this.props.history.push({pathname: pagina})
     }
 
     scroll = (to, time) => {
@@ -66,6 +72,7 @@ class Section extends React.Component {
             .on('value', snap => {
                 let value = snap.val() !== null ? Object.values(snap.val()) : []
                 context.setState({produtos: value, filtro: value})
+                localStorage.setItem(`fb:produtos`, hideData(value))
             })
     }
 
@@ -78,6 +85,7 @@ class Section extends React.Component {
                 let value = snap.val() !== null ? Object.values(snap.val()) : []
                 value.push({grupo: "Todos", id: "1", ordem: 999})
                 context.setState({grupos: value})
+                localStorage.setItem(`fb:grupos`, hideData(value))
             })
     }
 
@@ -87,11 +95,25 @@ class Section extends React.Component {
             .database()
             .ref('banners/')
             .on('value', snap => {
-                context.setState({banners: snap.val() !== null ? Object.values(snap.val()) : []})
+                let value = snap.val() !== null ? Object.values(snap.val()) : []
+                context.setState({banners: value})
+                localStorage.setItem(`fb:banners`, hideData(value))
             })
     }
 
+    buscarDados = () => {
+        let produtos = showData(localStorage.getItem(`fb:produtos`))
+        let grupos = showData(localStorage.getItem(`fb:grupos`))
+        let banners = showData(localStorage.getItem(`fb:banners`))
+        this.setState({
+            produtos: produtos !== undefined ? produtos : [],
+            grupos: grupos !== undefined ? grupos : [],
+            banners: banners !== undefined ? banners : []
+        })
+    }
+
     componentDidMount() {
+        this.buscarDados()
         this.buscarBanners()
         this.buscarGrupos()
         this.buscarProdutos()
@@ -107,12 +129,13 @@ class Section extends React.Component {
                     <Toolbar id="toolbar" variant="dense">
                         <div id="main-toolbar">
                             <div id="toolbar-left">
-                                <CardMedia id="img-logo" image={logo}/>
+                                <CardMedia id="img-logo" image={logo} onClick={() => this.pagina('/')}/>
                             </div>
                             <div id="toolbar-center">
                                 <Button id="button-menu" onClick={this.posicionar}>Produtos</Button>
                                 <Button id="button-menu">Minha Conta</Button>
                                 <Button id="button-menu" href="#footer">Contato</Button>
+                                <Button id="button-menu" onClick={() => this.pagina('/carrinho')}>Carrinho</Button>
                             </div>
                             <div id="toolbar-right">
 
@@ -165,4 +188,4 @@ class Section extends React.Component {
     }
 }
 
-export default Section
+export default withRouter(Section)

@@ -2,8 +2,9 @@ import React from 'react'
 import Section from '../components/Section'
 import Footer from '../components/Footer'
 import '../style/home.css'
-import {Button, CardMedia, Dialog, FormLabel, TextField} from '@material-ui/core'
+import {CardMedia, Dialog, FormLabel} from '@material-ui/core'
 import {Add, Remove} from '@material-ui/icons'
+import {hideData, showData} from "../util";
 
 class Home extends React.Component {
 
@@ -24,7 +25,11 @@ class Home extends React.Component {
 
     adicionaCarrinho = () => {
         const {produto, quantidade} = this.state
-        this.props.history.push({pathname: '/carrinho', state: {produto: produto, quantidade: quantidade}})
+        let produtos = showData(localStorage.getItem(`fb:itens`))
+        produtos = (produtos !== undefined) ? produtos : []
+        produtos.push({produto: produto, quantidade: quantidade})
+        localStorage.setItem(`fb:itens`, hideData(produtos))
+        this.props.history.push({pathname: '/carrinho'})
     }
 
     adicionaQuantidade = () => {
@@ -38,7 +43,7 @@ class Home extends React.Component {
     }
 
     render() {
-        const {openSacola, produto: {descricao, grupo, id, imagem, nome, observacao, preco}, quantidade} = this.state
+        const {openSacola, produto: {descricao, imagem, nome, observacao, preco}, quantidade} = this.state
         return (
             <div id="home">
 

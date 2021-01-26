@@ -17,6 +17,7 @@
 #img-logo {
     width: 100px;
     height: 70px;
+    cursor: pointer;
 }
 
 #main-toolbar {
@@ -41,6 +42,7 @@
 }
 
 #button-menu {
+    cursor: pointer;
     margin-right: 50px;
     font-size: medium;
     font-family: 'Work Sans', sans-serif;

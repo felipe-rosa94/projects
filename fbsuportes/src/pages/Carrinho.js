@@ -10,11 +10,15 @@ import {
     Radio,
     RadioGroup
 } from '@material-ui/core'
-import {Add, Remove} from '@material-ui/icons'
+import {Add, Remove, Delete} from '@material-ui/icons'
 import {withStyles} from '@material-ui/styles'
 import logo from '../images/logo.png'
 import '../style/header.css'
 import '../style/carrinho.css'
+import {hideData, showData} from "../util";
+import {Form} from "react-bootstrap";
+
+require('mercadopago')
 
 
 let fretes = []
@@ -38,7 +42,9 @@ class Carrinho extends React.Component {
         fretes: [],
         frete: 0,
         desconto: 1,
-        cep: ''
+        cep: '',
+        cupom: '',
+        produtos: []
     }
 
     onTipoEntrega = valor => {
@@ -46,10 +52,19 @@ class Carrinho extends React.Component {
     }
 
     inputs = e => {
-        if (e.target.name === 'cupom' && e.target.value === 'VALE10') {
-            this.setState({desconto: 0.9})
+        if (e.target.name === 'cep') {
+            if (e.target.value !== '')
+                this.setState({[e.target.name]: e.target.value.substring(0, 8)})
         } else {
-            this.setState({[e.target.name]: e.target.value})
+            this.setState({[e.target.name]: e.target.value.toUpperCase()})
+        }
+    }
+
+    onClickCupom = () => {
+        const {cupom} = this.state
+        if (cupom === 'VALE10') {
+            this.setState({desconto: 0.9})
+            localStorage.setItem(`desconto`, hideData(0.9))
         }
     }
 
@@ -58,14 +73,29 @@ class Carrinho extends React.Component {
             this.setState({quantidade: parseInt(e.target.value)})
     }
 
-    adicionaQuantidade = () => {
-        let {quantidade} = this.state
-        this.setState({quantidade: ++quantidade})
+    adicionaQuantidade = index => {
+        let {produtos} = this.state
+        produtos[index].quantidade++
+        this.setState({produtos: produtos})
+        localStorage.setItem(`fb:itens`, hideData(produtos))
     }
 
-    removeQuantidade = () => {
-        let {quantidade} = this.state
-        this.setState({quantidade: (quantidade !== 1) ? --quantidade : quantidade})
+    removeQuantidade = index => {
+        let {produtos} = this.state
+        produtos[index].quantidade--
+        if (produtos[index].quantidade === 0) {
+            this.deletaproduto(index, produtos)
+        } else {
+            this.setState({produtos: produtos})
+            localStorage.setItem(`fb:itens`, hideData(produtos))
+        }
+    }
+
+    deletaproduto = index => {
+        let {produtos} = this.state
+        produtos.splice(index, 1)
+        this.setState({produtos: produtos})
+        localStorage.setItem(`fb:itens`, hideData(produtos))
     }
 
     onClickScroll = id => {
@@ -75,6 +105,23 @@ class Carrinho extends React.Component {
             let target = document.getElementById(id)
             this.scroll(target.offsetTop, 0)
         }.bind(this), 100)
+    }
+
+    continuar = () => {
+        const {produtos, cep} = this.state
+        localStorage.setItem(`fb:itens`, hideData(produtos))
+        localStorage.setItem(`fb:cep`, hideData(cep, false))
+        this.props.history.replace({pathname: '/'})
+    }
+
+    finalizar = () => {
+        let itens = showData(localStorage.getItem(`fb:itens`))
+        if (itens !== undefined && itens.length !== 0)
+            this.props.history.push({pathname: '/checkout'})
+    }
+
+    pagina = pagina => {
+        this.props.history.push({pathname: pagina})
     }
 
     scroll = (to, time) => {
@@ -107,17 +154,19 @@ class Carrinho extends React.Component {
     }
 
     calcularFrete = async () => {
-        fretes = []
-        let tipos = ['pac', 'sedex']
-        tipos.forEach((i, index) => {
-            this.obterFrete(i)
-        })
+        const {cep} = this.state
+        if (cep.length === 8) {
+            fretes = []
+            let tipos = ['pac', 'sedex']
+            tipos.forEach((i, index) => {
+                this.obterFrete(i, cep, index)
+            })
+        } else {
+            alert('CEP inválido')
+        }
     }
 
-
-    obterFrete = async tipo => {
-        const {cep} = this.state
-
+    obterFrete = async (tipo, cep, index) => {
         let origem = '92410320'
         let altura = '50'
         let largura = '50'
@@ -129,6 +178,12 @@ class Carrinho extends React.Component {
         let url = `https://cors-anywhere.herokuapp.com/${URL_BASE}${PARAMS}`
 
         let {valor, prazo_entrega} = await fetch(url).then((response) => response.json())
+
+        if (valor === undefined) {
+            if (index)
+                alert('CEP inválido')
+            return
+        }
 
         let json = {
             valor: parseFloat(valor),
@@ -142,14 +197,29 @@ class Carrinho extends React.Component {
         this.setState({fretes: fretes})
     }
 
+    verificaProdutos = () => {
+        let produtos = showData(localStorage.getItem(`fb:itens`))
+        produtos = (produtos !== undefined) ? produtos : []
+        this.setState({produtos: produtos})
+    }
+
+    total = () => {
+        const {produtos, desconto, frete} = this.state
+        let total = 0
+        produtos.forEach(i => {
+            const {quantidade, produto: {preco}} = i
+            total += (parseFloat(preco) * quantidade)
+        })
+        return (frete + (total * desconto))
+    }
+
     componentDidMount() {
         fretes = []
-        const {produto, quantidade} = this.props.location.state
-        this.setState({produto: produto, quantidade: quantidade})
+        this.verificaProdutos()
     }
 
     render() {
-        const {produto: {nome, preco, imagem}, quantidade, fretes, frete, desconto} = this.state
+        const {produtos, fretes, desconto, cupom, cep} = this.state
         return (
             <section id="carrinho">
                 <AppBar
@@ -158,13 +228,14 @@ class Carrinho extends React.Component {
                     <Toolbar id="toolbar" variant="dense">
                         <div id="main-toolbar">
                             <div id="toolbar-left">
-                                <CardMedia id="img-logo" image={logo}/>
+                                <CardMedia id="img-logo" image={logo} onClick={() => this.pagina('/')}/>
                             </div>
                             <div id="toolbar-center">
                                 <Button id="button-menu"
                                         onClick={() => this.onClickScroll('section-produtos')}>Produtos</Button>
                                 <Button id="button-menu">Minha Conta</Button>
                                 <Button id="button-menu" onClick={() => this.onClickScroll('footer')}>Contato</Button>
+                                <Button id="button-menu">Carrinho</Button>
                             </div>
                             <div id="toolbar-right">
 
@@ -174,82 +245,96 @@ class Carrinho extends React.Component {
                 </AppBar>
 
                 <section id="carrinho-body">
-
-                    <section id="main-detalhes">
-
-                        <div id="div-produto">
-                            <div id="barra-titulo">
-                                <FormLabel id="label-barra">Produto</FormLabel>
-                            </div>
-                            <div id="div-descricoes-produto">
-                                <div id="div-imagem-produto">
-                                    <CardMedia image={imagem} id="imagem-produto"/>
-                                </div>
-                                <div id="div-label-nome-produto">
-                                    <FormLabel id="label-nome-produto">{nome}</FormLabel>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="div-preco-unitario">
-                            <div id="barra-titulo">
-                                <FormLabel id="label-barra">Preço unitário</FormLabel>
-                            </div>
-                            <div id="div-descricoes">
-                                <FormLabel id="label-preco-produto">{parseFloat(preco).toLocaleString('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL'
-                                })}</FormLabel>
-                            </div>
-                        </div>
-
-                        <div id="div-quantidade-barra">
-                            <div id="barra-titulo">
-                                <FormLabel id="label-barra">Quantidade</FormLabel>
-                            </div>
-                            <div id="div-descricoes">
-                                <div id="div-quantidade">
-                                    <div id="div-mais">
-                                        <Add id="icones" onClick={this.adicionaQuantidade}/>
+                    {
+                        produtos.map((i, index) => {
+                            const {produto: {nome, preco, imagem}, quantidade} = i
+                            return (
+                                <section id="main-detalhes">
+                                    <div id="div-produto">
+                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                            <FormLabel id="label-barra">Produto</FormLabel>
+                                        </div>
+                                        <div id="div-descricoes-produto">
+                                            <div id="div-imagem-produto">
+                                                <CardMedia image={imagem} id="imagem-produto"/>
+                                            </div>
+                                            <div id="div-label-nome-produto">
+                                                <FormLabel id="label-nome-produto">{nome}</FormLabel>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div id="div-qtd">
-                                        <input id="label-qtd" type="number"
-                                               value={quantidade} name="quantidade" onChange={this.handleQtd}/>
-                                    </div>
-                                    <div id="div-menos">
-                                        <Remove id="icones" onClick={this.removeQuantidade}/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div id="div-subtotal">
-                            <div id="barra-titulo">
-                                <FormLabel id="label-barra">SubTotal</FormLabel>
-                            </div>
-                            <div id="div-descricoes">
-                                <FormLabel
-                                    id="label-preco-produto">{(parseFloat(preco) * quantidade).toLocaleString('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL'
-                                })}</FormLabel>
-                            </div>
-                        </div>
+                                    <div id="div-preco-unitario">
+                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                            <FormLabel id="label-barra">Preço unitário</FormLabel>
+                                        </div>
+                                        <div id="div-descricoes">
+                                            <FormLabel
+                                                id="label-preco-produto">{parseFloat(preco).toLocaleString('pt-BR', {
+                                                style: 'currency',
+                                                currency: 'BRL'
+                                            })}</FormLabel>
+                                        </div>
+                                    </div>
 
-                    </section>
+                                    <div id="div-quantidade-barra">
+                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                            <FormLabel id="label-barra">Quantidade</FormLabel>
+                                        </div>
+                                        <div id="div-descricoes">
+                                            <div id="div-quantidade">
+                                                <div id="div-mais">
+                                                    <Add id="icones" onClick={() => this.adicionaQuantidade(index)}/>
+                                                </div>
+                                                <div id="div-qtd">
+                                                    <input id="label-qtd" type="number"
+                                                           value={quantidade} name="quantidade"
+                                                           onChange={this.handleQtd}/>
+                                                </div>
+                                                <div id="div-menos">
+                                                    <Remove id="icones" onClick={() => this.removeQuantidade(index)}/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="div-subtotal">
+                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                            <FormLabel id="label-barra">SubTotal</FormLabel>
+                                        </div>
+                                        <div id="div-descricoes">
+                                            <FormLabel
+                                                id="label-preco-produto">{(parseFloat(preco) * quantidade).toLocaleString('pt-BR', {
+                                                style: 'currency',
+                                                currency: 'BRL'
+                                            })}</FormLabel>
+                                        </div>
+                                    </div>
+
+                                    <div id="div-delete">
+                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                            <FormLabel id="label-barra">Retirar</FormLabel>
+                                        </div>
+                                        <div id="div-descricoes">
+                                            <Delete id="icones" onClick={() => this.deletaproduto(index)}/>
+                                        </div>
+                                    </div>
+
+                                </section>
+                            )
+                        })
+                    }
 
                     <section id="main-obs">
-
                         <div id="div-cep">
                             <div id="div-label-cep">
                                 <div id="div-cep-content">
                                     <TextField id="input-cep" name="cep" label="CEP" variant="outlined"
-                                               onChange={this.inputs}/>
+                                               value={cep} onChange={this.inputs}/>
                                     <Button id="botao-verificar" variant="outlined"
                                             onClick={this.calcularFrete}>Ok</Button>
                                 </div>
                             </div>
-
                             <RadioGroup id="div-resultados-cep">
                                 {
                                     fretes.map(i => (
@@ -265,8 +350,10 @@ class Carrinho extends React.Component {
                             <div id="div-label-cep">
                                 <div id="div-cep-content">
                                     <TextField id="input-cep" name="cupom" label="Cupom" variant="outlined"
+                                               value={cupom}
                                                onChange={this.inputs}/>
-                                    <Button id="botao-verificar" variant="outlined">Ok</Button>
+                                    <Button id="botao-verificar" variant="outlined"
+                                            onClick={this.onClickCupom}>Ok</Button>
                                 </div>
                             </div>
                             <div id="div-resultados-cep">
@@ -276,12 +363,14 @@ class Carrinho extends React.Component {
 
                         <div id="div-total">
                             <div id="div-resultados-totais">
-                                <FormLabel id="label-total">{`Total
-                                    ${(frete + ((parseFloat(preco) * quantidade) * desconto)).toLocaleString('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL'
-                                })}`}
-                                </FormLabel>
+                                <div>
+                                    <FormLabel id="label-total">Total :</FormLabel>
+                                    <FormLabel id="label-total-valor">{`${this.total().toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                    })}`}
+                                    </FormLabel>
+                                </div>
                                 {
                                     desconto !== 1 &&
                                     <FormLabel id="label-desconto">{`Desconto 10%`}</FormLabel>
@@ -289,8 +378,15 @@ class Carrinho extends React.Component {
                             </div>
                         </div>
 
+                        <div id="div-finalizar">
+                            <div id="div-botao-continuar" onClick={this.continuar}>
+                                Continuar comprando
+                            </div>
+                            <div id="div-botao-finalizar" onClick={this.finalizar}>
+                                Finalizar pedido
+                            </div>
+                        </div>
                     </section>
-
                 </section>
 
             </section>
