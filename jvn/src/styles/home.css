@@ -1,0 +1,59 @@
+#div-home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+#titulo-home {
+    text-align: center;
+    color: white;
+    font-size: large;
+}
+
+#version {
+    color: white;
+    text-align: center;
+    font-size: small;
+    margin-bottom: 80px;
+}
+
+/*Retira depois das inscrições.*/
+
+#div-retiro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 8px;
+}
+
+#titulo-retiro {
+    margin: 8px;
+    text-align: center;
+    color: white;
+    font-size: large;
+}
+
+#logo-retiro {
+    width: 800px;
+    height: 400px;
+    margin: 8px;
+    border-radius: 8px;
+}
+
+@media screen and (max-width: 600px) {
+    #titulo-retiro {
+        margin: 8px;
+        text-align: center;
+        color: white;
+        font-size: medium;
+    }
+
+    #logo-retiro {
+        width: 95%;
+        height: 150px;
+        margin: 0px;
+        border-radius: 8px;
+    }
+}

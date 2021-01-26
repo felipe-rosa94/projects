@@ -1,0 +1,159 @@
+#appBar {
+    position: sticky;
+    top: 0px;
+    background-color: #000000;
+}
+
+#toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 132px;
+}
+
+#toolbar-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 33%;
+}
+
+#toolbar-center {
+    display: flex;
+    justify-content: center;
+    width: 33%;
+}
+
+#toolbar-right {
+    width: 33%;
+}
+
+#btn-back {
+    width: 0px;
+    height: 0px;
+    display: none;
+}
+
+#logo {
+    width: 100px;
+    height: 100px;
+}
+
+@media screen and (max-width: 992px) {
+}
+
+@media screen and (max-width: 600px) {
+    #toolbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 72px;
+    }
+
+    #logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    #btn-back {
+        margin: 8px;
+        color: white;
+        width: 30px;
+        height: 30px;
+        display: none;
+    }
+}
+
+/* #appBar {
+    display: flex;
+    justify-content: center;
+    background-color: #1e1e26;
+}
+
+#toolbar {
+    padding: 0px;
+    width: 65%;
+}
+
+#main-toolbar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 132px;
+}
+
+#toolbar-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#logo {
+    width: 150px;
+    height: 50px;
+}
+
+#toolbar-right {
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+}
+
+#menu-item {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 16px;
+    margin-right: 16px;
+    color: white;
+    font-size: 18px;
+}
+
+@media screen and (max-width: 992px) {
+    #content-login {}
+}
+
+@media screen and (max-width: 600px) {
+    #appBar {
+        width: 100%;
+    }
+    #toolbar {
+        padding: 0px;
+        width: 100%;
+    }
+    #main-toolbar {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100px;
+        margin: 0px;
+    }
+    #toolbar-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 65%;
+        margin: 0px;
+    }
+    #toolbar-right {
+        width: 100%;
+        height: 35%;
+        margin: 0px;
+        background-color: #14141c;
+        overflow: auto;
+    }
+    #logo {
+        width: 100px;
+        height: 35px;
+    }
+    #menu-item {
+        margin-top: 8px;
+        margin-bottom: 8px;
+        margin-left: 16px;
+        margin-right: 16px;
+        color: white;
+        font-size: 16px;
+    }
+} */

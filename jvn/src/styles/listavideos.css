@@ -1,0 +1,48 @@
+#lista-videos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #252526;
+}
+
+#progress {
+    margin: 16px;
+}
+
+#main-videos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 24px;
+    width: 80%;
+    margin-bottom: 100px;
+}
+
+#card-video {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8px;
+    width: 640px;
+    background: #1e1e1e;
+}
+
+#descricao-video {
+    color: #82af69;
+    font-weight: 700;
+    font-family: sans-serif;
+    font-size: large;
+    margin: 4px;
+}
+
+@media screen and (max-width: 600px) {
+    #card-video {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 8px;
+        width: 370px;
+        background: #1e1e1e;
+    }
+}

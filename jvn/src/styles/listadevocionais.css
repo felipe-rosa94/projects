@@ -1,0 +1,209 @@
+#devocionais {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #252526;
+    margin-bottom: 100px;
+}
+
+#main-devocionais {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    width: 80%;
+}
+
+.card-devocionais {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    width: 40%;
+}
+
+#card-image-devocionais {
+    width: 100%;
+    height: 325px;
+    border-radius: 6px;
+}
+
+#card-descricoes-devocionais {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 4px;
+}
+
+#card-descricao-devocionais {
+    color: #82af69;
+    font-family: sans-serif;
+    font-size: 22px;
+    margin-top: 16px;
+}
+
+@media screen and (max-width: 992px) {
+    #main-devocionais {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        width: 100%;
+        margin-top: 8px;
+    }
+    .card-devocionais {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px;
+        width: 40%;
+    }
+    #card-image-devocionais {
+        width: 100%;
+        height: 300px;
+        border-radius: 6px;
+    }
+    #card-descricoes-devocionais {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 4px;
+    }
+    #card-descricao-devocionais {
+        color: #82af69;
+        font-family: sans-serif;
+        font-size: 18px;
+        margin-top: 16px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #main-devocionais {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 8px;
+    }
+    .card-devocionais {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background-color: #1e1e26;
+        padding: 0px;
+        margin: 8px;
+        width: 95%;
+        border-radius: 6px;
+    }
+    #card-image-devocionais {
+        width: 70%;
+        height: 120px;
+        border-radius: 0px;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+    }
+    #card-descricoes-devocionais {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-height: 120px;
+        padding: 0px;
+        align-items: center;
+    }
+    #card-descricao-devocionais {
+        color: #82af69;
+        font-size: small;
+        text-align: center;
+        font-weight: 700;
+        margin-top: 0px;
+    }
+}
+
+/* ----- home -----  */
+
+ #main-devocionais-home {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    width: 80%;
+}
+
+.card-devocionais-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    width: 40%;
+}
+
+#card-image-devocionais-home {
+    width: 100%;
+    height: 325px;
+    border-radius: 6px;
+}
+
+#card-descricoes-devocionais-home {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 4px;
+}
+
+#card-descricao-devocionais-home {
+    color: #82af69;
+    font-family: sans-serif;
+    font-size: 22px;
+    margin-top: 16px;
+} 
+
+@media screen and (max-width: 600px) {
+    #main-devocionais-home {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: 98%;
+        margin-top: 8px;
+        overflow: auto;
+    }
+
+    .card-devocionais-home {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #1e1e26;
+        padding: 0px;
+        margin: 8px;
+        width: 200px;
+        border-radius: 6px;
+    }
+    
+    #card-image-devocionais-home {
+        width: 200px;
+        height: 120px;
+        border-radius: 0px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+    #card-descricoes-devocionais-home {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-height: 120px;
+        padding: 0px;
+        height: 30px;
+        width: 100%;
+    }
+    #card-descricao-devocionais-home {
+        color: #82af69;
+        font-size: small;
+        text-align: center;
+        font-weight: 700;
+        margin-top: 0px;
+    }
+}

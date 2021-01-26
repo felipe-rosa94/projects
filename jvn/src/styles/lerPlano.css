@@ -1,0 +1,42 @@
+#ler-plano {
+    display: flex;
+    justify-content: center;
+}
+
+#main-ler-plano {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;  
+}
+
+#capitulos {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#capitulo {
+    text-align: center;
+    font-size: x-large;
+    color: white;
+    margin: 8px;
+}
+
+#versiculos {
+    padding: 10px;
+}
+
+#versiculo {
+    color: white;
+    line-height: 25px;
+}
+
+@media screen and (max-width: 600px) {
+    #main-ler-plano {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 8px;  
+    }
+}

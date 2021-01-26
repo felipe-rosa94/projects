@@ -1,0 +1,110 @@
+#inscricoes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#main-inscricoes {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#info-retiro {
+    text-align: center;
+    width: 800px;
+    font-size: larger;
+    color: white;
+    margin: 8px;
+}
+
+#meme {
+    width: 400px;
+    height: 400px;
+    margin: 16px;
+}
+
+#titulo-retiro {
+    font-size: xx-large;
+    color: white;
+}
+
+#div-dados {
+    width: 800px;
+    margin-top: 16px;
+    margin-bottom: 100px;
+    background: white;
+    border-radius: 8px;
+}
+
+#div-cpf-data {
+    display: flex;
+    flex-direction: row;
+}
+
+#label-text {
+    border-color: white;
+}
+
+#main-qrcode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#div-qrcode {
+    margin: 16px;
+    width: 200px;
+    height: 200px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+#qrcode {
+    width: 300px;
+    height: 300px;
+}
+
+#div-botoes {
+    margin: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#botao-carona {
+    margin: 8px;
+}
+
+@media screen and (max-width: 600px) {
+    #main-inscricoes {
+        width: 100%;
+    }
+
+    #info-retiro {
+        width: 95%;
+    }
+
+    #div-dados {
+        width: 95%;
+    }
+
+    #logo-retiro {
+        width: 95%;
+        height: 150px;
+        margin: 8px;
+        border-radius: 8px;
+    }
+
+    #meme {
+        width: 200px;
+        height: 200px;
+        margin: 16px;
+    }
+}
