@@ -8,14 +8,29 @@ import {
     DialogTitle,
     DialogContent,
     TextField,
+    FormControlLabel,
     Toolbar,
-    FormLabel, Divider
+    FormLabel,
+    Divider,
+    Radio,
+    RadioGroup
 } from '@material-ui/core'
 import logo from '../images/logo.png'
 import '../style/checkout.css'
-import {cepMask, removeCharacter, cpfMask, hideData, phoneMask, showData, getDeliveryValues} from '../util'
+import {cepMask, removeCharacter, cpfMask, hideData, phoneMask, showData, getDeliveryValues, getAddress} from '../util'
 
 import firebase from '../firebase'
+import {withStyles} from '@material-ui/styles'
+
+const RadioCheck = withStyles({
+    root: {
+        color: '#000000',
+        '&$checked': {
+            color: '#000000',
+        },
+    },
+    checked: {},
+})(props => <Radio color="default" {...props} />)
 
 class Checkout extends React.Component {
 
@@ -30,7 +45,12 @@ class Checkout extends React.Component {
         telefone: '',
         cep: '',
         logado: false,
-        fretes: []
+        fretes: [],
+        rua: '',
+        bairro: '',
+        cidade: '',
+        uf: '',
+        complemento: ''
     }
 
     inputs = async e => {
@@ -191,6 +211,12 @@ class Checkout extends React.Component {
         }
     }
 
+    entrega = async () => {
+        const {cep} = this.state
+        let {logradouro, bairro, localidade, uf} = await getAddress(cep)
+        this.setState({rua: logradouro, bairro: bairro, cidade: localidade, uf: uf})
+    }
+
     componentDidMount() {
         this.cupom()
         this.itens()
@@ -210,7 +236,12 @@ class Checkout extends React.Component {
             cpf,
             logado,
             cep,
-            fretes
+            fretes,
+            rua,
+            bairro,
+            cidade,
+            uf,
+            complemento
         } = this.state
         return (
             <div id="checkout">
@@ -350,12 +381,49 @@ class Checkout extends React.Component {
                             </div>
 
                             <div id="div-login">
-                                {
-                                    fretes.map(i => (
-
-                                    ))
-                                }
+                                <RadioGroup id="div-resultados-cep">
+                                    {
+                                        fretes.map(i => (
+                                            <FormControlLabel id="label-valor-prazo-entrega"
+                                                              control={<RadioCheck/>} value={i.tipo} label={i.tipo}
+                                                              onChange={() => this.entrega(i)}/>
+                                        ))
+                                    }
+                                </RadioGroup>
                             </div>
+
+                            {
+                                fretes.length !== 0 &&
+                                <div>
+                                    <div id="div-cartao">
+                                        <Box p={1}/>
+                                        <TextField fullWidth name="rua" value={rua} label="Rua" variant="outlined"/>
+                                        <Box p={1}/>
+                                    </div>
+
+                                    <div id="div-cartao">
+                                        <Box p={1}/>
+                                        <TextField name="bairro" value={bairro} label="Bairro" variant="outlined"/>
+                                        <Box p={1}/>
+                                        <TextField name="numero" label="Nº" variant="outlined"/>
+                                        <Box p={1}/>
+                                    </div>
+
+                                    <div id="div-cartao">
+                                        <Box p={1}/>
+                                        <TextField name="cidade" value={cidade} label="Cidade" variant="outlined"/>
+                                        <Box p={1}/>
+                                        <TextField name="uf" value={uf} label="Uf" variant="outlined"/>
+                                        <Box p={1}/>
+                                    </div>
+
+                                    <div id="div-cartao">
+                                        <Box p={1}/>
+                                        <TextField fullWidth name="complemento" label="Complemento" variant="outlined"/>
+                                        <Box p={1}/>
+                                    </div>
+                                </div>
+                            }
 
                         </div>
 

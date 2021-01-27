@@ -5,29 +5,13 @@ import {
     CardMedia,
     FormLabel,
     Toolbar,
-    TextField,
-    FormControlLabel,
-    Radio,
-    RadioGroup
+    TextField
 } from '@material-ui/core'
 import {Add, Remove, Delete} from '@material-ui/icons'
-import {withStyles} from '@material-ui/styles'
 import logo from '../images/logo.png'
 import '../style/header.css'
 import '../style/carrinho.css'
-import {hideData, showData, removeCharacter, getDeliveryValues} from "../util"
-
-let fretes = []
-
-const RadioCheck = withStyles({
-    root: {
-        color: '#000000',
-        '&$checked': {
-            color: '#000000',
-        },
-    },
-    checked: {},
-})(props => <Radio color="default" {...props} />)
+import {hideData, showData, removeCharacter, getDeliveryValues} from '../util'
 
 class Carrinho extends React.Component {
 
@@ -41,10 +25,6 @@ class Carrinho extends React.Component {
         cep: '',
         cupom: '',
         produtos: []
-    }
-
-    onTipoEntrega = valor => {
-        this.setState({frete: valor})
     }
 
     inputs = async e => {
@@ -155,20 +135,6 @@ class Carrinho extends React.Component {
         }
     }
 
-    calcularFrete = async () => {
-        const {cep} = this.state
-        if (cep.length === 8) {
-            fretes = []
-            let tipos = ['pac', 'sedex']
-            tipos.forEach((i, index) => {
-                this.obterFrete(i, cep, index)
-            })
-        } else {
-            alert('CEP inválido')
-        }
-    }
-
-
     verificaProdutos = () => {
         let produtos = showData(localStorage.getItem(`fb:itens`))
         produtos = (produtos !== undefined) ? produtos : []
@@ -186,12 +152,11 @@ class Carrinho extends React.Component {
     }
 
     componentDidMount() {
-        fretes = []
         this.verificaProdutos()
     }
 
     render() {
-        const {produtos, fretes, desconto, cupom, cep} = this.state
+        const {produtos, desconto, cupom} = this.state
         return (
             <section id="carrinho">
                 <AppBar

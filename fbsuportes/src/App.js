@@ -6,7 +6,7 @@ import Checkout from './pages/Checkout'
 
 const App = () => {
     return (
-        <BrowserRouter basename="/mercadopago">
+        <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={Home}/>
                 <Route exact path="/carrinho" component={Carrinho}/>

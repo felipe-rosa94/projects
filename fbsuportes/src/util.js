@@ -76,10 +76,15 @@ const getDeliveryValues = async (origem = '', destino = '', altura = '50', largu
             tipo: `${tipo.toUpperCase()} ${parseFloat(valor).toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
-            })} ${prazo_entrega} ${prazo_entrega === '1' ? 'Dia' : 'Dias'}`,
+            })}, ${prazo_entrega} ${prazo_entrega === '1' ? 'Dia' : 'Dias'}`,
         })
     }
     return fretes
 }
 
-export {hideData, showData, phoneMask, cpfMask, mcc, removeCharacter, cepMask, getDeliveryValues}
+const getAddress = async cep => {
+    let url = `https://viacep.com.br/ws/${cep}/json/`
+    return await fetch(url).then((response) => response.json())
+}
+
+export {hideData, showData, phoneMask, cpfMask, cepMask, mcc, removeCharacter, getDeliveryValues, getAddress}
