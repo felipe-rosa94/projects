@@ -53,7 +53,7 @@ const getDeliveryValues = async (origem = '', destino = '', altura = '50', largu
 
     fretes.push({
         valor: 0,
-        tipo: `Retirar com o vendedor, dia a combinar`
+        tipo: `Combinar a entrega`
     })
 
     for (const i of ['pac', 'sedex']) {

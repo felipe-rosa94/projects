@@ -38,6 +38,7 @@ class Checkout extends React.Component {
         itens: [],
         cupom: 1,
         openCadastro: false,
+        openEndereco: false,
         email: '',
         senha: '',
         repetirSenha: '',
@@ -50,7 +51,12 @@ class Checkout extends React.Component {
         bairro: '',
         cidade: '',
         uf: '',
-        complemento: ''
+        endereco: '',
+        complemento: '',
+        tipoEntrega: {
+            tipo: '',
+            valor: 0
+        }
     }
 
     inputs = async e => {
@@ -121,13 +127,13 @@ class Checkout extends React.Component {
     }
 
     total = () => {
-        const {itens, desconto} = this.state
+        const {itens, desconto, tipoEntrega: {valor}} = this.state
         let total = 0
         itens.forEach(i => {
             const {produto: {preco}, quantidade} = i
             total += (parseFloat(preco) * quantidade)
         })
-        return (total * desconto).toLocaleString('pt-BR', {
+        return (total * desconto + valor).toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         })
@@ -181,6 +187,12 @@ class Checkout extends React.Component {
         this.setState({openCadastro: false})
     }
 
+    confirmarEndereco = () => {
+        const {cep, rua, bairro, numero, cidade, uf, complemento} = this.state
+        let endereco = `${rua}, ${complemento ? `(${complemento})` : ``} ${numero} - ${bairro}, ${cidade} - ${uf}, ${cep}`
+        this.setState({endereco: endereco, openEndereco: false})
+    }
+
     login = () => {
         let {email, senha} = this.state
         let context = this
@@ -211,10 +223,24 @@ class Checkout extends React.Component {
         }
     }
 
-    entrega = async () => {
+    entrega = async (index, object) => {
         const {cep} = this.state
-        let {logradouro, bairro, localidade, uf} = await getAddress(cep)
-        this.setState({rua: logradouro, bairro: bairro, cidade: localidade, uf: uf})
+        if (index !== 0) {
+            let {logradouro, bairro, localidade, uf} = await getAddress(cep)
+            this.setState({
+                rua: logradouro,
+                bairro: bairro,
+                cidade: localidade,
+                uf: uf,
+                openEndereco: true,
+                tipoEntrega: {
+                    valor: object.valor,
+                    tipo: object.tipo
+                }
+            })
+        } else {
+            this.setState({endereco: '', tipoEntrega: {valor: object.valor, tipo: object.tipo}})
+        }
     }
 
     componentDidMount() {
@@ -241,7 +267,9 @@ class Checkout extends React.Component {
             bairro,
             cidade,
             uf,
-            complemento
+            complemento,
+            endereco,
+            openEndereco
         } = this.state
         return (
             <div id="checkout">
@@ -380,50 +408,24 @@ class Checkout extends React.Component {
                                            variant="outlined"/>
                             </div>
 
+                            {
+                                endereco &&
+                                <div id="div-login">
+                                    <FormLabel id="label-cliente">{endereco}</FormLabel>
+                                </div>
+                            }
+
                             <div id="div-login">
                                 <RadioGroup id="div-resultados-cep">
                                     {
-                                        fretes.map(i => (
+                                        fretes.map((i, index) => (
                                             <FormControlLabel id="label-valor-prazo-entrega"
                                                               control={<RadioCheck/>} value={i.tipo} label={i.tipo}
-                                                              onChange={() => this.entrega(i)}/>
+                                                              onChange={() => this.entrega(index, i)}/>
                                         ))
                                     }
                                 </RadioGroup>
                             </div>
-
-                            {
-                                fretes.length !== 0 &&
-                                <div>
-                                    <div id="div-cartao">
-                                        <Box p={1}/>
-                                        <TextField fullWidth name="rua" value={rua} label="Rua" variant="outlined"/>
-                                        <Box p={1}/>
-                                    </div>
-
-                                    <div id="div-cartao">
-                                        <Box p={1}/>
-                                        <TextField name="bairro" value={bairro} label="Bairro" variant="outlined"/>
-                                        <Box p={1}/>
-                                        <TextField name="numero" label="Nº" variant="outlined"/>
-                                        <Box p={1}/>
-                                    </div>
-
-                                    <div id="div-cartao">
-                                        <Box p={1}/>
-                                        <TextField name="cidade" value={cidade} label="Cidade" variant="outlined"/>
-                                        <Box p={1}/>
-                                        <TextField name="uf" value={uf} label="Uf" variant="outlined"/>
-                                        <Box p={1}/>
-                                    </div>
-
-                                    <div id="div-cartao">
-                                        <Box p={1}/>
-                                        <TextField fullWidth name="complemento" label="Complemento" variant="outlined"/>
-                                        <Box p={1}/>
-                                    </div>
-                                </div>
-                            }
 
                         </div>
 
@@ -463,17 +465,62 @@ class Checkout extends React.Component {
 
                 </section>
 
+                <Dialog open={openEndereco} aria-labelledby="form-dialog-title"
+                        onClose={() => this.setState({openEndereco: false})}>
+                    <DialogTitle id="form-dialog-title">Cadastro</DialogTitle>
+                    <DialogContent>
+                        <div>
+                            <div id="div-cartao">
+                                <Box p={1}/>
+                                <TextField fullWidth name="rua" value={rua} label="Rua" variant="outlined"/>
+                                <Box p={1}/>
+                            </div>
+
+                            <div id="div-cartao">
+                                <Box p={1}/>
+                                <TextField name="bairro" value={bairro} label="Bairro" variant="outlined"/>
+                                <Box p={1}/>
+                                <TextField name="numero" label="Nº" variant="outlined" onChange={this.inputs}/>
+                                <Box p={1}/>
+                            </div>
+
+                            <div id="div-cartao">
+                                <Box p={1}/>
+                                <TextField name="cidade" value={cidade} label="Cidade" variant="outlined"/>
+                                <Box p={1}/>
+                                <TextField name="uf" value={uf} label="Uf" variant="outlined"/>
+                                <Box p={1}/>
+                            </div>
+
+                            <div id="div-cartao">
+                                <Box p={1}/>
+                                <TextField fullWidth name="complemento" value={complemento} label="Complemento"
+                                           variant="outlined" onChange={this.inputs}/>
+                                <Box p={1}/>
+                            </div>
+
+                            <div id="div-cartao">
+                                <Box p={1}/>
+                                <div id="div-botao-cadastrar" onClick={this.confirmarEndereco}>
+                                    Confirmar
+                                </div>
+                                <Box p={1}/>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
                 <Dialog open={openCadastro} aria-labelledby="form-dialog-title"
                         onClose={() => this.setState({openCadastro: false})}>
                     <DialogTitle id="form-dialog-title">Cadastro</DialogTitle>
                     <DialogContent>
 
-                        <div id="div-cadastro">
+                        <div id="div-cartao">
                             <TextField fullWidth={true} name="email" value={email} onChange={this.inputs} label="E-mail"
                                        variant="outlined"/>
                         </div>
 
-                        <div id="div-cadastro">
+                        <div id="div-cartao">
                             <TextField fullWidth={true} name="senha" value={senha} onChange={this.inputs} label="Senha"
                                        variant="outlined"/>
                             <Box p={1}/>
@@ -484,23 +531,23 @@ class Checkout extends React.Component {
 
                         <Divider/>
 
-                        <div id="div-cadastro">
+                        <div id="div-cartao">
                             <TextField fullWidth={true} name="nome" value={nome} onChange={this.inputs} label="Nome"
                                        variant="outlined"/>
                         </div>
 
-                        <div id="div-cadastro">
+                        <div id="div-cartao">
                             <TextField fullWidth={true} name="telefone" value={telefone} onChange={this.inputs}
                                        label="Telefone"
                                        variant="outlined"/>
                         </div>
 
-                        <div id="div-cadastro">
+                        <div id="div-cartao">
                             <TextField fullWidth={true} name="cpf" value={cpf} onChange={this.inputs} label="CPF"
                                        variant="outlined"/>
                         </div>
 
-                        <div id="div-cadastro">
+                        <div id="div-cartao">
                             <div id="div-botao-cadastrar" onClick={this.cadastrar}>
                                 Cadastrar
                             </div>
