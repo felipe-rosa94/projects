@@ -235,6 +235,8 @@
 </footer>
 
 <script>
+    console.log('3')
+
     function enviar() {
         let name = document.getElementById('name').value
         let email = document.getElementById('email').value
@@ -251,7 +253,7 @@
             text: `Nome: ${name}\nE-mail: ${email}\nMensagem: ${message}`
         }
 
-        fetch('https://cors-anywhere.herokuapp.com/http://whiledev.kinghost.net:21045/mail', {
+        fetch('https://whiledev.com.br:21045/mail', {
             method: 'POST',
             body: JSON.stringify(json)
         })
@@ -260,7 +262,7 @@
                 console.log(data)
             })
             .catch((error) => {
-                console.log(data)
+                console.log(error)
             })
     }
 </script>

@@ -1,13 +1,17 @@
 const showData = data => {
-    if (data) {
-        data = data.split('').reverse().join('')
-        data = atob(data)
-        return JSON.parse(data)
+    try {
+        if (data !== null && data !== undefined) {
+            data = data.split('').reverse().join('')
+            data = atob(data)
+            return JSON.parse(data)
+        }
+    } catch (e) {
+
     }
 }
 
 const hideData = data => {
-    if (data) {
+    if (data !== null && data !== undefined) {
         data = JSON.stringify(data)
         data = btoa(data)
         data = data.split('').reverse().join('')
@@ -22,11 +26,21 @@ const phoneMask = phone => {
     }
 }
 
-const cpfMask = cpf => {
-    if (cpf !== '' && cpf !== undefined) {
-        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3\-\$4")
-        return cpf.substring(0, 14)
+const cpfMask = campoTexto => {
+    if (campoTexto.length <= 11) {
+        campoTexto = removeCharacter(campoTexto)
+        return mascaraCpf(campoTexto)
+    } else {
+        campoTexto = removeCharacter(campoTexto)
+        return mascaraCnpj(campoTexto).substring(0, 18)
     }
+}
+
+const mascaraCpf = valor => {
+    return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3\-\$4");
+}
+const mascaraCnpj = valor => {
+    return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, "\$1.\$2.\$3.\$4\-\$5");
 }
 
 const cepMask = cep => {
@@ -34,12 +48,27 @@ const cepMask = cep => {
     return cep.substring(0, 8)
 }
 
-const mcc = v => {
+const dateMask = date => {
+    let v = date.replace(/\D/g, '').slice(0, 10)
+    if (v.length >= 5) {
+        return `${v.slice(0, 2)}/${v.slice(4)}`
+    } else if (v.length >= 3) {
+        return `${v.slice(0, 2)}/${v.slice(2)}`
+    }
+    return v
+}
+
+const cardMask = v => {
     v = v.replace(/\D/g, "");
     v = v.replace(/(\d{4})/g, "$1 ");
     v = v.replace(/\.$/, "");
     v = v.substring(0, 19)
     return v;
+}
+
+const ccvMask = cvv => {
+    cvv = removeCharacter(cvv)
+    return cvv.substring(0, 4)
 }
 
 const removeCharacter = text => {
@@ -49,36 +78,17 @@ const removeCharacter = text => {
 
 const getDeliveryValues = async (origem = '', destino = '', altura = '50', largura = '50', comprimento = '50', peso = '500') => {
 
-    let fretes = []
-
-    fretes.push({
-        valor: 0,
-        tipo: `Combinar a entrega`
-    })
-
-    for (const i of ['pac', 'sedex']) {
-        let index = ['pac', 'sedex'].indexOf(i)
-        let tipo = index ? 'sedex' : 'pac'
-
-        let URL_BASE = 'http://webservice.kinghost.net/web_frete.php?auth=0dd752ad2a1455f7be761d450d84b240'
-        let PARAMS = `&tipo=${tipo}&formato=json&cep_origem=${origem}&cep_destino=${destino}&cm_altura=${altura}&cm_largura=${largura}&cm_comprimento=${comprimento}&peso=${peso}`
-        let url = `https://cors-anywhere.herokuapp.com/${URL_BASE}${PARAMS}`
-
-        let {valor, prazo_entrega} = await fetch(url).then((response) => response.json())
-
-        if (!valor || !prazo_entrega) {
-            alert('CEP inválido')
-            break
-        }
-
-        fretes.push({
-            valor: parseFloat(valor),
-            tipo: `${tipo.toUpperCase()} ${parseFloat(valor).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            })}, ${prazo_entrega} ${prazo_entrega === '1' ? 'Dia' : 'Dias'}`,
-        })
+    let json = {
+        origem: origem,
+        destino: destino,
+        altura: altura,
+        largura: largura,
+        comprimento: comprimento,
+        peso: peso
     }
+
+    let url = 'http://localhost:21045/calculaFrete'
+    let {fretes} = await fetch(url, {method: 'post', body: JSON.stringify(json)}).then((response) => response.json())
     return fretes
 }
 
@@ -87,4 +97,16 @@ const getAddress = async cep => {
     return await fetch(url).then((response) => response.json())
 }
 
-export {hideData, showData, phoneMask, cpfMask, cepMask, mcc, removeCharacter, getDeliveryValues, getAddress}
+export {
+    hideData,
+    showData,
+    phoneMask,
+    cpfMask,
+    cepMask,
+    dateMask,
+    cardMask,
+    ccvMask,
+    removeCharacter,
+    getDeliveryValues,
+    getAddress
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Mercado Pago</title>
+    <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body onload="onCreate()">
+<section id="section-main">
+    <section id="section-data">
+        <img src="./images/mercado.png" id="img-mercado-pago">
+        <form action="/process_payment" method="post" id="paymentForm">
+
+            <div class="div-data">
+                <div class="div-labels">
+                    <label for="docType" class="title-labels">Tipo de documento</label>
+                    <select id="docType" class="div-select" name="docType" data-checkout="docType" type="text">
+                    </select>
+                </div>
+                <div class="div-labels">
+                    <label for="docNumber" class="title-labels">Número do documento</label>
+                    <input id="docNumber" class="input-labels" name="docNumber" data-checkout="docNumber" type="text"/>
+                </div>
+            </div>
+
+            <div class="div-data">
+                <div class="div-labels">
+                    <label for="cardholderName" class="title-labels">Titular do cartão</label>
+                    <input id="cardholderName" class="input-labels" data-checkout="cardholderName" type="text"/>
+                </div>
+                <div>
+                    <label for="" class="title-labels">Data de vencimento</label>
+                    <div id="div-date">
+                        <input type="text" placeholder="MM" id="cardExpirationMonth" class="input-labels-data"
+                               data-checkout="cardExpirationMonth"
+                               onselectstart="return false" onpaste="return false"
+                               oncopy="return false" oncut="return false"
+                               ondrag="return false" ondrop="return false" autocomplete=off/>
+                        <span class="date-separator">/</span>
+                        <input type="text" placeholder="YY" id="cardExpirationYear" class="input-labels-data"
+                               data-checkout="cardExpirationYear"
+                               onselectstart="return false" onpaste="return false"
+                               oncopy="return false" oncut="return false"
+                               ondrag="return false" ondrop="return false" autocomplete=off/>
+                    </div>
+                </div>
+                <div class="div-labels">
+                    <label for="cardNumber" class="title-labels">Número do cartão</label>
+                    <input type="text" id="cardNumber" class="input-labels" data-checkout="cardNumber"
+                           onselectstart="return false" onpaste="return false"
+                           oncopy="return false" oncut="return false"
+                           ondrag="return false" ondrop="return false" autocomplete=off/>
+                </div>
+                <div class="div-labels">
+                    <label for="securityCode" class="title-labels">Código de segurança</label>
+                    <input id="securityCode" class="input-labels" data-checkout="securityCode" type="text"
+                           onselectstart="return false" onpaste="return false"
+                           oncopy="return false" oncut="return false"
+                           ondrag="return false" ondrop="return false" autocomplete=off/>
+                </div>
+                <div class="div-labels">
+                    <label for="installments" class="title-labels">Parcelas</label>
+                    <select type="text" id="installments" class="div-select" name="installments">
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="hidden" name="transactionAmount" id="transactionAmount" value="100"/>
+                    <input type="hidden" name="paymentMethodId" id="paymentMethodId"/>
+                    <input type="hidden" name="description" id="description"/>
+                    <br/>
+                    <button id="button-pay" type="submit">Pagar</button>
+                    <br/>
+                </div>
+            </div>
+        </form>
+    </section>
+    <section id="section-details">
+
+        <label id="title-label-purchase-detail">Detalhes da compra</label>
+
+        <div id="div-products"></div>
+
+        <div id="div-discount">
+            <label id="title-label-discount">Desconto</label>
+            <label id="title-label-price-discount">R$ 20,00</label>
+        </div>
+
+        <div id="div-delevery">
+            <label id="title-label-delevery">Entrega</label>
+            <label id="title-label-price-delevery">R$ 20,00</label>
+        </div>
+
+        <div id="div-total">
+            <label id="title-label-total">Total</label>
+            <label id="title-label-price-total">R$ 40,00</label>
+        </div>
+
+    </section>
+</section>
+<script src="script.js"></script>
+</body>
+</html>

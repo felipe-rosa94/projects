@@ -13,7 +13,8 @@ class Section extends React.Component {
         produtos: [],
         filtro: [],
         grupos: [],
-        banners: []
+        banners: [],
+        quantidadeItens: 0
     }
 
     filtrar = grupo => {
@@ -112,15 +113,21 @@ class Section extends React.Component {
         })
     }
 
+    quantidadeItens = () => {
+        let produtos = showData(localStorage.getItem(`fb:itens`))
+        this.setState({quantidadeItens: (produtos !== undefined) ? produtos.length : 0})
+    }
+
     componentDidMount() {
         this.buscarDados()
         this.buscarBanners()
         this.buscarGrupos()
         this.buscarProdutos()
+        this.quantidadeItens()
     }
 
     render() {
-        const {grupos, filtro, banners} = this.state
+        const {grupos, filtro, banners, quantidadeItens} = this.state
         return (
             <section id="section">
                 <AppBar
@@ -135,7 +142,12 @@ class Section extends React.Component {
                                 <Button id="button-menu" onClick={this.posicionar}>Produtos</Button>
                                 <Button id="button-menu">Minha Conta</Button>
                                 <Button id="button-menu" href="#footer">Contato</Button>
-                                <Button id="button-menu" onClick={() => this.pagina('/carrinho')}>Carrinho</Button>
+                                <Button id="button-menu" onClick={() => this.pagina('/carrinho')}>Carrinho
+                                    {
+                                        quantidadeItens !== 0 &&
+                                        <div id="div-carrinho">{quantidadeItens}</div>
+                                    }
+                                </Button>
                             </div>
                             <div id="toolbar-right">
 

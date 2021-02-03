@@ -82,6 +82,19 @@
     margin: 20px;
 }
 
+#div-carrinho {
+    margin: 8px;
+    width: 40px;
+    height: 40px;
+    background-color: grey;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Work Sans', sans-serif;
+}
+
 #form-label-nome {
     cursor: pointer;
     margin-top: 8px;
