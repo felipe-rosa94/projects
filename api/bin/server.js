@@ -1,5 +1,5 @@
 const app = require('../src/app')
-const https = require('http')
+const https = require('https')
 const fs = require('fs')
 
 /*
@@ -11,7 +11,7 @@ const credentials = {key: privateKey, cert: certificate}
 const port = normalizePort(process.env.PORT || '21045')
 app.set('port', port)
 
-const httpsServer = https.createServer( app)
+const httpsServer = https.createServer(credentials, app)
 httpsServer.listen(port)
 httpsServer.on('error', onError)
 
