@@ -2,21 +2,18 @@ const app = require('../src/app')
 const https = require('https')
 const fs = require('fs')
 
-/*
-const privateKey = fs.readFileSync('/home/whiledev/apps_nodejs/api/bin/certificate.key')
-const certificate = fs.readFileSync('/home/whiledev/apps_nodejs/api/bin/certificate.crt')
+let privateKey = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.key')
+let certificate = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.crt')
 const credentials = {key: privateKey, cert: certificate}
- */
 
-const port = normalizePort(process.env.PORT || '21045')
-app.set('port', port)
+const httpsPort = normalizePort(process.env.PORT || '21045')
+app.set('port', httpsPort)
 
 const httpsServer = https.createServer(credentials, app)
-httpsServer.listen(port)
+httpsServer.listen(httpsPort)
 httpsServer.on('error', onError)
 
 console.log('API rodando ...')
-console.log('Versão 2.0')
 
 function normalizePort(val) {
     const port = parseInt(val, 10)
