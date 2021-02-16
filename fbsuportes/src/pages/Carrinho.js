@@ -5,15 +5,41 @@ import {
     CardMedia,
     FormLabel,
     Toolbar,
-    TextField, RadioGroup, FormControlLabel, Box, Radio, Dialog, DialogTitle, DialogContent, Divider
+    TextField,
+    RadioGroup,
+    FormControlLabel,
+    Box,
+    Radio,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    Divider
 } from '@material-ui/core'
-import {Add, Remove, Delete, Edit} from '@material-ui/icons'
+import {
+    isMobile
+} from 'react-device-detect'
+import {
+    Add,
+    Remove,
+    Delete,
+    Edit
+} from '@material-ui/icons'
+import {
+    hideData,
+    showData,
+    removeCharacter,
+    getDeliveryValues,
+    phoneMask,
+    cpfMask,
+    cepMask,
+    getAddress
+} from '../util'
+import {
+    withStyles
+} from '@material-ui/styles'
+import firebase from '../firebase'
 import logo from '../images/logo.png'
-import '../style/header.css'
 import '../style/carrinho.css'
-import {hideData, showData, removeCharacter, getDeliveryValues, phoneMask, cpfMask, cepMask, getAddress} from '../util'
-import {withStyles} from "@material-ui/styles";
-import firebase from "../firebase";
 
 const RadioCheck = withStyles({
     root: {
@@ -169,7 +195,7 @@ class Carrinho extends React.Component {
             return
         }
 
-        localStorage.setItem(`fb:valorDesconto`, hideData(this.total() * 0.1))
+        localStorage.setItem(`fb:valorDesconto`, hideData(this.totalProdutos() * 0.1))
 
         localStorage.setItem(`fb:total`, hideData(this.total()))
 
@@ -223,6 +249,16 @@ class Carrinho extends React.Component {
             total += (parseFloat(preco) * quantidade)
         })
         return (valor + (total * desconto))
+    }
+
+    totalProdutos = () => {
+        const {produtos} = this.state
+        let total = 0
+        produtos.forEach(i => {
+            const {quantidade, produto: {preco}} = i
+            total += (parseFloat(preco) * quantidade)
+        })
+        return total
     }
 
     quantidadeItens = () => {
@@ -457,7 +493,7 @@ class Carrinho extends React.Component {
                             <div id="toolbar-center">
                                 <Button id="button-menu"
                                         onClick={() => this.onClickScroll('section-produtos')}>Produtos</Button>
-                                <Button id="button-menu">Minha Conta</Button>
+                                <Button id="button-menu" onClick={() => this.pagina('/pedidos')}>Meus Pedidos</Button>
                                 <Button id="button-menu" onClick={() => this.onClickScroll('footer')}>Contato</Button>
                                 <Button id="button-menu">Carrinho
                                     {
@@ -480,7 +516,7 @@ class Carrinho extends React.Component {
                             return (
                                 <section id="main-detalhes">
                                     <div id="div-produto">
-                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                        <div id="barra-titulo" style={index && !isMobile ? {display: 'none'} : {}}>
                                             <FormLabel id="label-barra">Produto</FormLabel>
                                         </div>
                                         <div id="div-descricoes-produto">
@@ -494,7 +530,7 @@ class Carrinho extends React.Component {
                                     </div>
 
                                     <div id="div-preco-unitario">
-                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                        <div id="barra-titulo" style={index && !isMobile ? {display: 'none'} : {}}>
                                             <FormLabel id="label-barra">Preço unitário</FormLabel>
                                         </div>
                                         <div id="div-descricoes">
@@ -507,7 +543,7 @@ class Carrinho extends React.Component {
                                     </div>
 
                                     <div id="div-quantidade-barra">
-                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                        <div id="barra-titulo" style={index && !isMobile ? {display: 'none'} : {}}>
                                             <FormLabel id="label-barra">Quantidade</FormLabel>
                                         </div>
                                         <div id="div-descricoes">
@@ -528,7 +564,7 @@ class Carrinho extends React.Component {
                                     </div>
 
                                     <div id="div-subtotal">
-                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                        <div id="barra-titulo" style={index && !isMobile ? {display: 'none'} : {}}>
                                             <FormLabel id="label-barra">SubTotal</FormLabel>
                                         </div>
                                         <div id="div-descricoes">
@@ -541,7 +577,7 @@ class Carrinho extends React.Component {
                                     </div>
 
                                     <div id="div-delete">
-                                        <div id="barra-titulo" style={index ? {display: 'none'} : {}}>
+                                        <div id="barra-titulo" style={index && !isMobile ? {display: 'none'} : {}}>
                                             <FormLabel id="label-barra">Retirar</FormLabel>
                                         </div>
                                         <div id="div-descricoes">

@@ -423,3 +423,62 @@
     display: flex;
     flex-direction: column;
 }
+
+@media screen and (max-width: 920px) {
+
+    #carrinho-body {
+        width: 95%;
+    }
+
+    #div-dados-checkout {
+        flex-direction: column;
+    }
+
+    #div-login-entrega-cartao {
+        width: 100%;
+    }
+
+    #div-finalizar {
+        flex-direction: column;
+    }
+
+    #div-botao-finalizar {
+        width: auto;
+    }
+
+    #main-detalhes {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-bottom: 0.5px solid #B6B6B8;
+    }
+
+    #div-descricoes-produto {
+        flex: 1;
+    }
+
+    #div-preco-unitario {
+        display: none;
+    }
+
+    #div-delete {
+        display: none;
+    }
+
+    #div-preco-unitario {
+        width: 48%;
+    }
+
+    #div-quantidade-barra {
+        width: 48%;
+    }
+
+    #div-descricoes {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    #label-qtd {
+        padding: 0;
+    }
+}

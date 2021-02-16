@@ -177,6 +177,49 @@ textarea:focus, input:focus, select:focus {
     font-size: larger;
 }
 
+.title-labels {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+#docType {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+#installments {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+#cardholderName {
+    font-family: 'Lato', sans-serif;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+
+#cardExpirationMonth {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+#cardExpirationYear {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+#cardNumber {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+#securityCode {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
+
+
+
 @media screen and (max-width: 1440px) {
     #section-main {
         width: 70%;
@@ -229,13 +272,20 @@ textarea:focus, input:focus, select:focus {
         margin-bottom: 10px;
     }
 
-    #div-products {
+    #div-description-prices {
+        flex: 1;
         margin-top: 30px;
         padding-left: 20px;
         padding-right: 20px;
     }
 
     #div-delevery {
+        margin-top: 30px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    #div-discount {
         margin-top: 30px;
         padding-left: 20px;
         padding-right: 20px;

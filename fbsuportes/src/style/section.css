@@ -19,6 +19,8 @@
     position: sticky;
     top: 100px;
     width: 100%;
+    overflow: auto;
+    white-space: nowrap;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -34,7 +36,7 @@
 
 #carousel {
     width: 100%;
-    margin-top: 100px;
+    margin-top: 155px;
 }
 
 #img-carousel {
@@ -116,4 +118,139 @@
     margin-bottom: 8px;
     font-family: 'Work Sans', sans-serif;
     color: green;
+}
+
+#header {
+    position: sticky;
+    top: 0;
+}
+
+#appBar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+}
+
+#toolbar {
+    height: 100px;
+    width: 90%;
+}
+
+#img-logo {
+    width: 100px;
+    height: 70px;
+    cursor: pointer;
+}
+
+#main-toolbar {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+#toolbar-left {
+    display: flex;
+    flex: 1;
+}
+
+#toolbar-center {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+#toolbar-right {
+    display: none;
+}
+
+#button-menu {
+    cursor: pointer;
+    margin-right: 50px;
+    font-size: medium;
+    font-family: 'Work Sans', sans-serif;
+}
+
+
+@media screen and (max-width: 920px) {
+    #toolbar-center {
+        display: none;
+    }
+
+    #section-produtos {
+        width: 95%;
+        flex-direction: column;
+    }
+
+    #section-produto {
+        width: 100%;
+    }
+
+    #img-carousel {
+        height: 150px;
+        width: 100%;
+    }
+
+    #section-grupos {
+        justify-content: space-between;
+    }
+
+    #buttons-grupo {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    #img-produto {
+        width: 150px;
+        height: 150px;
+        margin: 20px;
+    }
+
+    #img-logo {
+        width: 80px;
+        height: 56px;
+        cursor: pointer;
+    }
+
+    #toolbar-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #icone-menu {
+        width: 30px;
+        height: 30px;
+    }
+
+    #div-img-drawer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    #div-img-drawer-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #img-close {
+        width: 30px;
+        height: 30px;
+    }
+
+    #div-item-drawer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 8px;
+    }
+
+    #name-drawer {
+        font-family: 'Lato', sans-serif;
+        color: #1e1e1e;
+        font-size: large;
+        margin: 4px;
+    }
 }

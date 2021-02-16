@@ -37,10 +37,11 @@ const cpfMask = campoTexto => {
 }
 
 const mascaraCpf = valor => {
-    return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3\-\$4");
+    return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3\-\$4")
 }
+
 const mascaraCnpj = valor => {
-    return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, "\$1.\$2.\$3.\$4\-\$5");
+    return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, "\$1.\$2.\$3.\$4\-\$5")
 }
 
 const cepMask = cep => {
@@ -87,7 +88,7 @@ const getDeliveryValues = async (origem = '', destino = '', altura = '50', largu
         peso: peso
     }
 
-    let url = 'http://localhost:21045/calculaFrete'
+    let url = 'https://whiledev.com.br:21045/calculaFrete'
     let {fretes} = await fetch(url, {method: 'post', body: JSON.stringify(json)}).then((response) => response.json())
     return fretes
 }

@@ -1,3 +1,5 @@
+import {hideData} from "../../src/util";
+
 function onCreate() {
     window.Mercadopago.setPublishableKey('TEST-bb26eadd-f187-4249-b04a-42351a53b7d5')
     window.Mercadopago.getIdentificationTypes()
@@ -5,7 +7,6 @@ function onCreate() {
     discount()
     delivery()
     total()
-    cliente()
 }
 
 document.getElementById('cardNumber').addEventListener('change', guessPaymentMethod);
@@ -99,29 +100,112 @@ function setCardTokenAndPay(status, response) {
         let cliente = showData(localStorage.getItem(`fb:cliente`))
         let delivery = showData(localStorage.getItem(`fb:tipoEntrega`))
         let total = showData(localStorage.getItem(`fb:total`))
+        let pedidos = showData(localStorage.getItem(`fb:itens`))
+
+        let id = id()
+
+        let envio = {
+            client: cliente,
+            delivery: delivery,
+            order: pedidos,
+            total: total,
+            id: id
+        }
+
+        gravarPedido(id)
+        enviaPedido(envio)
+        clear()
+
+        let numberCard = document.getElementById('cardNumber').value
+        let flag = validateCard(numberCard)
 
         let json = {
             token: response.id,
             delivery: delivery,
             client: cliente,
-            total: total
+            total: total,
+            flag: flag
         }
 
-        let url = 'https://whiledev.com.br:21045/mercadoPago'
+        let url = 'http://localhost:21045/mercadoPago'
         let config = {method: 'post', body: JSON.stringify(json)}
+        console.log(json)
 
         fetch(url, config)
             .then((data) => data.json())
             .then((response) => {
-                console.log(response)
+                const {returnCode, message} = response
+                if (returnCode) {
+                    sessionStorage.setItem(`fb:compraAprovada`, message)
+                    window.location.href = '/'
+                }
             })
             .catch((error) => {
                 console.log(error)
             })
 
     } else {
-        alert("Verify filled data!\n" + JSON.stringify(response, null, 4));
+        alert("Verify filled data!\n" + JSON.stringify(response, null, 4))
     }
+}
+
+const clear = () => {
+    try {
+        localStorage.removeItem(`fb:itens`)
+        localStorage.removeItem(`fb:tipoEntrega`)
+        localStorage.removeItem(`fb:endereco`)
+        localStorage.removeItem(`fb:cep`)
+        localStorage.removeItem(`fb:desconto`)
+    } catch (e) {
+
+    }
+}
+
+const gravarPedido = id => {
+    try {
+        let ids = showData(localStorage.getItem(`fb:pedidos`))
+        ids = ids !== null ? ids : []
+        ids.push(id)
+        localStorage.setItem(`fb:pedidos`, hideData(ids))
+    } catch (e) {
+
+    }
+}
+
+const enviaPedido = envio => {
+    try {
+
+
+    } catch (e) {
+
+    }
+}
+
+const id = () => {
+    let key = new Date()
+    return `${key.getTime() - 999}${Math.floor(Math.random() * 999)}`
+}
+
+const validateCard = numberCard => {
+    if (numberCard.length <= 19 && !isNaN(removeCharacter(numberCard))) {
+        let cartoes = {
+            visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
+            mastercard: /^5[1-5][0-9]{14}$|^2(?:2(?:2[1-9]|[3-9][0-9])|[3-6][0-9][0-9]|7(?:[01][0-9]|20))[0-9]{12}$/,
+            amex: /^3[47][0-9]{13}$/
+        }
+
+        function card(nr, cartoes) {
+            for (var cartao in cartoes) if (nr.match(cartoes[cartao])) return cartao
+            return ''
+        }
+
+        return card(removeCharacter(numberCard), cartoes)
+    }
+}
+
+const removeCharacter = text => {
+    text = text.replace(/[^\d]+/g, '')
+    return text.trim()
 }
 
 const showProducts = () => {
@@ -162,17 +246,6 @@ const total = () => {
             currency: 'BRL'
         })
     }
-}
-
-const cliente = () => {
-    let cliente = showData(localStorage.getItem(`fb:cliente`))
-
-    let docType = document.getElementById('docType')
-    let index = cliente.cpf.length === 14 ? 0 : 1
-    docType.options[index].selected = true
-
-    let docNumber = document.getElementById('docNumber')
-    docNumber.value = cliente.cpf
 }
 
 const labels = objeto => {

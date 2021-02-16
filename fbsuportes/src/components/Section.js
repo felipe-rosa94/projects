@@ -1,15 +1,34 @@
 import React from 'react'
 import {withRouter} from 'react-router-dom'
-import '../style/section.css'
-import firebase from '../firebase'
-import {AppBar, Button, CardMedia, FormLabel, Toolbar} from '@material-ui/core'
+import {AppBar, Button, CardMedia, FormLabel, Toolbar, Hidden, Drawer} from '@material-ui/core'
+import {makeStyles} from '@material-ui/core/styles'
+import {Menu, Close} from '@material-ui/icons'
 import {Carousel} from 'react-bootstrap'
 import logo from '../images/logo.png'
-import {hideData, showData} from "../util";
+import {hideData, showData} from '../util'
+import firebase from '../firebase'
+import '../style/section.css'
+
+const classes = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    drawer: {
+        [theme.breakpoints.up('sm')]: {
+            width: 240,
+            flexShrink: 0,
+        },
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+        width: 240,
+    }
+}))
 
 class Section extends React.Component {
 
     state = {
+        drawer: false,
         produtos: [],
         filtro: [],
         grupos: [],
@@ -30,10 +49,16 @@ class Section extends React.Component {
     posicionar = () => {
         let elem = document.getElementById('section-produtos')
         this.scroll(elem.offsetTop, 250)
+        this.setState({drawer: false})
     }
 
     pagina = pagina => {
         this.props.history.push({pathname: pagina})
+    }
+
+    linkHref = elem => {
+        window.location.href = elem
+        this.setState({drawer: false})
     }
 
     scroll = (to, time) => {
@@ -118,6 +143,11 @@ class Section extends React.Component {
         this.setState({quantidadeItens: (produtos !== undefined) ? produtos.length : 0})
     }
 
+    clickMenu = () => {
+        const {drawer} = this.state
+        this.setState({drawer: !drawer})
+    }
+
     componentDidMount() {
         this.buscarDados()
         this.buscarBanners()
@@ -127,7 +157,7 @@ class Section extends React.Component {
     }
 
     render() {
-        const {grupos, filtro, banners, quantidadeItens} = this.state
+        const {drawer, grupos, filtro, banners, quantidadeItens} = this.state
         return (
             <section id="section">
                 <AppBar
@@ -140,7 +170,7 @@ class Section extends React.Component {
                             </div>
                             <div id="toolbar-center">
                                 <Button id="button-menu" onClick={this.posicionar}>Produtos</Button>
-                                <Button id="button-menu">Minha Conta</Button>
+                                <Button id="button-menu" onClick={() => this.pagina('/pedidos')}>Meus Pedidos</Button>
                                 <Button id="button-menu" href="#footer">Contato</Button>
                                 <Button id="button-menu" onClick={() => this.pagina('/carrinho')}>Carrinho
                                     {
@@ -150,7 +180,7 @@ class Section extends React.Component {
                                 </Button>
                             </div>
                             <div id="toolbar-right">
-
+                                <Menu id="icone-menu" onClick={this.clickMenu}/>
                             </div>
                         </div>
                     </Toolbar>
@@ -164,6 +194,49 @@ class Section extends React.Component {
                     </section>
 
                 </AppBar>
+
+                <section>
+                    <nav className={classes.drawer} aria-label="mailbox folders">
+                        <Hidden smUp implementation="css">
+                            <Drawer variant="temporary" anchor='top' open={drawer}
+                                    onClose={() => this.setState({drawer: false})}
+                                    classes={{
+                                        paper: classes.drawerPaper,
+                                    }}
+                                    ModalProps={{
+                                        keepMounted: true,
+                                    }}>
+                                <section>
+                                    <section className={classes.toolbar}/>
+                                    <section id="div-img-drawer">
+                                        <section id="div-img-drawer-center">
+                                            <CardMedia id="img-logo" image={logo}/>
+                                        </section>
+                                        <section id="div-img-drawer-right">
+                                            <Close id="img-close" onClick={() => this.setState({drawer: false})}/>
+                                        </section>
+                                    </section>
+                                    <section/>
+                                    <section id="div-drawer" style={{width: window.innerWidth}}>
+                                        <section id="div-item-drawer" onClick={this.posicionar}>
+                                            <FormLabel id="name-drawer">Produtos</FormLabel>
+                                        </section>
+                                        <section id="div-item-drawer" onClick={() => this.pagina('/pedidos')}>
+                                            <FormLabel id="name-drawer">Meus Pedidos</FormLabel>
+                                        </section>
+                                        <section id="div-item-drawer">
+                                            <FormLabel id="name-drawer"
+                                                       onClick={() => this.linkHref('#footer')}>Contato</FormLabel>
+                                        </section>
+                                        <section id="div-item-drawer" onClick={() => this.pagina('/carrinho')}>
+                                            <FormLabel id="name-drawer">Carrinho</FormLabel>
+                                        </section>
+                                    </section>
+                                </section>
+                            </Drawer>
+                        </Hidden>
+                    </nav>
+                </section>
 
                 <section id="section-body">
                     <Carousel id="carousel">

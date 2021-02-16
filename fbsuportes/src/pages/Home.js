@@ -2,14 +2,15 @@ import React from 'react'
 import Section from '../components/Section'
 import Footer from '../components/Footer'
 import '../style/home.css'
-import {CardMedia, Dialog, FormLabel} from '@material-ui/core'
-import {Add, Remove} from '@material-ui/icons'
-import {hideData, showData} from "../util";
+import {CardMedia, Dialog, DialogContent, FormLabel} from '@material-ui/core'
+import {Add, Remove, CheckCircle} from '@material-ui/icons'
+import {hideData, showData} from '../util'
 
 class Home extends React.Component {
 
     state = {
         openSacola: false,
+        openCompra: false,
         produto: {},
         quantidade: 1
     }
@@ -42,8 +43,24 @@ class Home extends React.Component {
         this.setState({quantidade: (quantidade !== 1) ? --quantidade : quantidade})
     }
 
+    compraAprovada = () => {
+        let compra = sessionStorage.getItem(`fb:compraAprovada`)
+        if (compra) {
+            this.setState({openCompra: true})
+        }
+    }
+
+    fecharCompra = () => {
+        this.setState({openCompra: false})
+        sessionStorage.removeItem(`fb:compraAprovada`)
+    }
+
+    componentDidMount() {
+        this.compraAprovada()
+    }
+
     render() {
-        const {openSacola, produto: {descricao, imagem, nome, observacao, preco}, quantidade} = this.state
+        const {openSacola, openCompra, produto: {descricao, imagem, nome, observacao, preco}, quantidade} = this.state
         return (
             <div id="home">
 
@@ -95,6 +112,29 @@ class Home extends React.Component {
                         </div>
 
                     </div>
+                </Dialog>
+
+                <Dialog open={openCompra} onClose={this.fecharCompra}>
+                    <DialogContent id="dialog-content-compra">
+
+                        <CheckCircle id="img-check"/>
+
+                        <div id="div-dialog-compra">
+                            <FormLabel id="label-compra">Pagamento realizado com sucesso</FormLabel>
+                            <FormLabel id="label-descricao-compra">
+                                Seu pedido foi enviado e está sendo preparado, caso queira contatar o vendendor
+                                para combinar a entrega pode entrar em contato por telefone ou WhatsApp pelo número
+                                <strong id="link-whats">
+                                    <a id="link-whats" href="https://api.whatsapp.com/send?phone=5551995983880">
+                                        (51) 99598-3880
+                                    </a>
+                                </strong>
+                                ou por e-mail fabio@fbsuportes.com.br, você pode acompanhar sua compra acessando Meus
+                                Pedido, no menu.
+                            </FormLabel>
+                        </div>
+
+                    </DialogContent>
                 </Dialog>
 
             </div>

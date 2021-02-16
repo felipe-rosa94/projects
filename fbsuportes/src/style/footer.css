@@ -58,13 +58,13 @@
 #form-label-fone {
     color: white;
     font-family: 'Work Sans', sans-serif;
-    margin-left: 8px;
+    margin: 8px;
 }
 
 #form-label-email {
     color: white;
     font-family: 'Work Sans', sans-serif;
-    margin-left: 8px;
+    margin: 8px;
 }
 
 #input-footer {
@@ -93,4 +93,20 @@
     justify-content: center;
     border-radius: 4px;
     width: 50%;
+}
+
+
+@media screen and (max-width: 920px) {
+    #footer-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #input-footer {
+        width: 70%;
+    }
+
+    #botao-enviar {
+        width: 70%;
+    }
 }

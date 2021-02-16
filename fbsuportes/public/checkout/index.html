@@ -34,13 +34,13 @@
                     <label for="" class="title-labels">Data de vencimento</label>
                     <div id="div-date">
                         <input type="text" placeholder="MM" id="cardExpirationMonth" class="input-labels-data"
-                               data-checkout="cardExpirationMonth"
+                               data-checkout="cardExpirationMonth" maxlength="2"
                                onselectstart="return false" onpaste="return false"
                                oncopy="return false" oncut="return false"
                                ondrag="return false" ondrop="return false" autocomplete=off/>
                         <span class="date-separator">/</span>
                         <input type="text" placeholder="YY" id="cardExpirationYear" class="input-labels-data"
-                               data-checkout="cardExpirationYear"
+                               data-checkout="cardExpirationYear" maxlength="2"
                                onselectstart="return false" onpaste="return false"
                                oncopy="return false" oncut="return false"
                                ondrag="return false" ondrop="return false" autocomplete=off/>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="div-labels">
                     <label for="cardNumber" class="title-labels">Número do cartão</label>
-                    <input type="text" id="cardNumber" class="input-labels" data-checkout="cardNumber"
+                    <input type="text" id="cardNumber" maxlength="16" class="input-labels" data-checkout="cardNumber"
                            onselectstart="return false" onpaste="return false"
                            oncopy="return false" oncut="return false"
                            ondrag="return false" ondrop="return false" autocomplete=off/>
@@ -56,7 +56,7 @@
                 <div class="div-labels">
                     <label for="securityCode" class="title-labels">Código de segurança</label>
                     <input id="securityCode" class="input-labels" data-checkout="securityCode" type="text"
-                           onselectstart="return false" onpaste="return false"
+                           onselectstart="return false" onpaste="return false" maxlength="4"
                            oncopy="return false" oncut="return false"
                            ondrag="return false" ondrop="return false" autocomplete=off/>
                 </div>
