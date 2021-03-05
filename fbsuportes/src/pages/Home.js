@@ -122,18 +122,21 @@ class Home extends React.Component {
                         <div id="div-dialog-compra">
                             <FormLabel id="label-compra">Pagamento realizado com sucesso</FormLabel>
                             <FormLabel id="label-descricao-compra">
-                                Seu pedido foi enviado e está sendo preparado, caso queira contatar o vendendor
+                                Seu pedido foi enviado e está sendo preparado.
+                            </FormLabel>
+                            <FormLabel id="label-descricao-compra">
+                                Caso queira contatar o vendendor
                                 para combinar a entrega pode entrar em contato por telefone ou WhatsApp pelo número
+                                <br/>
                                 <strong id="link-whats">
-                                    <a id="link-whats" href="https://api.whatsapp.com/send?phone=5551995983880">
-                                        (51) 99598-3880
-                                    </a>
+                                    <a id="link-whats"
+                                       href="https://api.whatsapp.com/send?phone=5551995983880">
+                                        (51) 99598-3880 </a>
                                 </strong>
                                 ou por e-mail fabio@fbsuportes.com.br, você pode acompanhar sua compra acessando Meus
                                 Pedido, no menu.
                             </FormLabel>
                         </div>
-
                     </DialogContent>
                 </Dialog>
 

@@ -218,7 +218,10 @@ textarea:focus, input:focus, select:focus {
     font-weight: bolder;
 }
 
-
+#docNumber {
+    font-family: 'Lato', sans-serif;
+    font-weight: bolder;
+}
 
 @media screen and (max-width: 1440px) {
     #section-main {

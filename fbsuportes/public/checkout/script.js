@@ -1,5 +1,3 @@
-import {hideData} from "../../src/util";
-
 function onCreate() {
     window.Mercadopago.setPublishableKey('TEST-bb26eadd-f187-4249-b04a-42351a53b7d5')
     window.Mercadopago.getIdentificationTypes()
@@ -102,24 +100,13 @@ function setCardTokenAndPay(status, response) {
         let total = showData(localStorage.getItem(`fb:total`))
         let pedidos = showData(localStorage.getItem(`fb:itens`))
 
-        let id = id()
-
-        let envio = {
-            client: cliente,
-            delivery: delivery,
-            order: pedidos,
-            total: total,
-            id: id
-        }
-
-        gravarPedido(id)
-        enviaPedido(envio)
         clear()
 
         let numberCard = document.getElementById('cardNumber').value
         let flag = validateCard(numberCard)
 
         let json = {
+            order: pedidos,
             token: response.id,
             delivery: delivery,
             client: cliente,
@@ -159,31 +146,6 @@ const clear = () => {
     } catch (e) {
 
     }
-}
-
-const gravarPedido = id => {
-    try {
-        let ids = showData(localStorage.getItem(`fb:pedidos`))
-        ids = ids !== null ? ids : []
-        ids.push(id)
-        localStorage.setItem(`fb:pedidos`, hideData(ids))
-    } catch (e) {
-
-    }
-}
-
-const enviaPedido = envio => {
-    try {
-
-
-    } catch (e) {
-
-    }
-}
-
-const id = () => {
-    let key = new Date()
-    return `${key.getTime() - 999}${Math.floor(Math.random() * 999)}`
 }
 
 const validateCard = numberCard => {
