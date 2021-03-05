@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer')
-const axios = require('axios')
 
-exports.mail = (req, res) => {
+exports.mail = (req, res = null) => {
     let remetente = nodemailer.createTransport({
         host: 'smtp.live.com',
         service: 'Hotmail',
@@ -15,7 +14,7 @@ exports.mail = (req, res) => {
     const {to, subject, text} = req.body
 
     if (!to || !text) {
-        res.status(400).send({returnCode: 0, message: 'Erro! envie os dados corretamente.'})
+        if (res) res.status(400).send({returnCode: 0, message: 'Erro! envie os dados corretamente.'})
         return
     }
 
@@ -28,9 +27,9 @@ exports.mail = (req, res) => {
 
     remetente.sendMail(email, function (error) {
         if (error) {
-            res.status(400).send({returnCode: 0, message: error})
+            if (res) res.status(400).send({returnCode: 0, message: error})
         } else {
-            res.status(200).send({returnCode: 1, message: 'Email enviado com sucesso.'})
+            if (res) res.status(200).send({returnCode: 1, message: 'Email enviado com sucesso.'})
         }
     })
 }

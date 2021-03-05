@@ -1,15 +1,20 @@
 const app = require('../src/app')
-const https = require('https')
+const https = require('http')
 const fs = require('fs')
+
+/*
+let privateKey = fs.readFileSync('C:/projects/trunk/certificate.key')
+let certificate = fs.readFileSync('C:/projects/trunk/certificate.crt')
 
 let privateKey = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.key')
 let certificate = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.crt')
 const credentials = {key: privateKey, cert: certificate}
+*/
 
 const httpsPort = normalizePort(process.env.PORT || '21045')
 app.set('port', httpsPort)
 
-const httpsServer = https.createServer(credentials, app)
+const httpsServer = https.createServer(app)
 httpsServer.listen(httpsPort)
 httpsServer.on('error', onError)
 
