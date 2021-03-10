@@ -6,7 +6,7 @@ const app = express()
 app.use(cors({origin: '*'}))
 app.use(express.json({type: ['application/json', 'text/plain']}))
 
-const url = 'mongodb://whiledev01:LiPe0310@mongodb.whiledev.com.br:27017/whiledev01'
+const url = ''
 
 mongoose.connect(url, {useNewUrlParser: true})
 const con = mongoose.connection
