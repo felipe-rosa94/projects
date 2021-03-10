@@ -1,47 +1,60 @@
-const Client = require('../models/client')
+const mongoose = require('mongoose')
+let ObjectID = require('mongodb').ObjectID
 
-exports.get = ('/', async (req, res) => {
+exports.get = ('/:id', (req, res) => {
+    getTable(req, res)
+})
+
+exports.post = ('/:id', (req, res) => {
+    register(req, res)
+})
+
+exports.delete = ('/:id', (req, res) => {
+    remove(req, res)
+})
+
+const getTable = async (req, res) => {
     try {
-        const client = await Client.find()
-        res.json(client)
+        const {params: {id}, query} = req
+        const database = mongoose.connection.collection(id)
+        const response = await database.find(query).toArray()
+        res.status(200).send(response)
     } catch (e) {
         res.status(500).send(e.message)
     }
-})
+}
 
-exports.patch = ('/:id', async (req, res) => {
+const register = (req, res) => {
     try {
-        const {params: {id}} = req
-        const client = await Client.findById(id)
-        res.json(client)
+        const {body, params: {id}} = req
+        const database = mongoose.connection.collection(id)
+        database
+            .insertOne(body)
+            .then((response) => {
+                res.status(200).send({returnCode: 1, message: 'Gravado'})
+            })
+            .catch((error) => {
+                res.status(400).send(error)
+            })
     } catch (e) {
         res.status(500).send(e.message)
     }
-})
+}
 
-exports.post = ('/', async (req, res) => {
-    const {name, email, anddres} = req.body
-
-    const client = new Client({
-        name: name,
-        email: email,
-        anddres: anddres
-    })
-
+const remove = (req, res) => {
     try {
-        const object = await client.save()
-        res.json(object)
+        const {params: {id}, query} = req
+        const database = mongoose.connection.collection(id)
+        const _id = new ObjectID(query.id)
+        database
+            .deleteOne({_id: _id})
+            .then((response) => {
+                res.status(200).send({returnCode: 1, message: 'Deletado'})
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     } catch (e) {
         res.status(500).send(e.message)
     }
-})
-
-exports.delete = ('/:id', async (req, res) => {
-    const {params: {id}} = req
-    try {
-        const client = await Client.remove({"_id": id})
-        res.json(client)
-    } catch (e) {
-        res.status(500).send(e.message)
-    }
-})
+}

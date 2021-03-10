@@ -1,13 +1,17 @@
 const app = require('../src/app')
-const http = require('http')
+const https = require('https')
+const fs = require('fs')
 
-const port = normalizePort(process.env.PORT || '3000')
-app.set('port', port)
+let privateKey = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.key')
+let certificate = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.crt')
+const credentials = {key: privateKey, cert: certificate}
 
-const server = http.createServer(app)
+const httpsPort = normalizePort(process.env.PORT || '21052')
+app.set('port', httpsPort)
 
-server.listen(port)
-server.on('error', onError)
+const httpsServer = https.createServer(credentials, app)
+httpsServer.listen(httpsPort)
+httpsServer.on('error', onError)
 
 console.log('API rodando ...')
 

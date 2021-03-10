@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
 
-const dbFb = new mongoose.Schema({
-
-})
-
 const anddresSchema = new mongoose.Schema({
     anddres: {
         type: String,

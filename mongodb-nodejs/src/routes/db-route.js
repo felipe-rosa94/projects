@@ -2,11 +2,9 @@ const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/db-controller')
 
-router.post('/', controller.post)
+router.post('/:id', controller.post)
 
-router.get('/', controller.get)
-
-router.patch('/:id', controller.patch)
+router.get('/:id', controller.get)
 
 router.delete('/:id', controller.delete)
 
