@@ -2,6 +2,8 @@ const app = require('../src/app')
 const https = require('https')
 const fs = require('fs')
 
+//C:/projects/trunk
+
 let privateKey = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.key')
 let certificate = fs.readFileSync('/home/whiledev/apps_nodejs/certificate.crt')
 const credentials = {key: privateKey, cert: certificate}
